@@ -1,0 +1,5 @@
+test_board.txt
+.git
+*.o
+./play_peg
+.vscode/*
