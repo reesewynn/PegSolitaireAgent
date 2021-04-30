@@ -1,26 +1,34 @@
 #include "peg_solitaire.hpp"
 #include <iostream>
+#include <stack>
 
 using std::cout, std::cin, std::endl;
+using std::stack;
 
 
-void backtrack(PegSolitaire &ps) {
+stack<move_type> path;
+
+bool backtrack(PegSolitaire &ps) {
     if (ps.isWon()) { // successful case
-        cout << "Won!" << endl;
-        return;
+        // cout << "Won!" << endl;
+        return true;
     }
     else if (ps.isTerminal()) { // no options and failed
-        return;
+        return false;
     }
 
     // backup the moves to prevent recomputation
     shared_ptr<vector<move_type>> movesCopy(ps.getLegalMoves());
     for (move_type move : *movesCopy) { // try all moves
         ps.executeMove(move);
-        backtrack(ps); // recursive backtracking
+        if (backtrack(ps)) { // recursive backtracking
+            path.push(move);
+            return true;
+        } 
         ps.undoMove(move);
         ps.setLegalMoves(movesCopy); // uses smart pointers to avoid copying
     }
+    return false;
 }
 
 int main(int argc, char** argv) {
@@ -43,5 +51,13 @@ int main(int argc, char** argv) {
         pegBoard = PegSolitaire(inputBoard);
     }
     
-    backtrack(pegBoard);
+    if (backtrack(pegBoard)) {
+        while (!path.empty()) {
+             cout << path.top() << endl;
+             path.pop();
+        }
+    }
+    else {
+        cout << "NO SOLUTION" << endl;
+    }
 }

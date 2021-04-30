@@ -67,5 +67,6 @@ public:
 
 
 ostream& operator<<(ostream &os, const move_type& move); 
+ostream& operator<<(ostream &os, const direction& dir); 
 
 #endif /* PEG_SOLITAIRE_H */

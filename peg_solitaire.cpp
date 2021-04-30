@@ -147,3 +147,24 @@ ostream& operator<<(ostream &os, const move_type& move) {
         << " dir: " << move.second;
     return os;
 }
+
+ostream& operator<<(ostream &os, const direction& dir) {
+    switch (dir) {
+        case NORTH:
+            os << "NORTH";
+            break;
+        case EAST:
+            os << "EAST";
+            break;
+        case SOUTH:
+            os << "SOUTH";
+            break;
+        case WEST:
+            os << "WEST";
+            break;
+        default:
+            os << "INVALID DIR";
+            break;
+    }
+    return os;
+}
