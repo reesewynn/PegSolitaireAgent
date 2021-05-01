@@ -1,35 +1,12 @@
 #include "peg_solitaire.hpp"
+#include "serial_search.hpp"
 #include <iostream>
 #include <stack>
 
 using std::cout, std::cin, std::endl;
 using std::stack;
 
-
-stack<move_type> path;
-
-bool backtrack(PegSolitaire &ps) {
-    if (ps.isWon()) { // successful case
-        // cout << "Won!" << endl;
-        return true;
-    }
-    else if (ps.isTerminal()) { // no options and failed
-        return false;
-    }
-
-    // backup the moves to prevent recomputation
-    shared_ptr<vector<move_type>> movesCopy(ps.getLegalMoves());
-    for (move_type move : *movesCopy) { // try all moves
-        ps.executeMove(move);
-        if (backtrack(ps)) { // recursive backtracking
-            path.push(move);
-            return true;
-        } 
-        ps.undoMove(move);
-        ps.setLegalMoves(movesCopy); // uses smart pointers to avoid copying
-    }
-    return false;
-}
+// stack<move_type> path;
 
 int main(int argc, char** argv) {
     PegSolitaire pegBoard;
@@ -50,8 +27,9 @@ int main(int argc, char** argv) {
         }
         pegBoard = PegSolitaire(inputBoard);
     }
-    
-    if (backtrack(pegBoard)) {
+    stack<move_type> path = serial::backtrack(pegBoard);
+    // TODO: if terminal from start, this is wrong.
+    if (!path.empty()) {
         while (!path.empty()) {
              cout << path.top() << endl;
              path.pop();

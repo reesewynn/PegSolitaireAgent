@@ -99,7 +99,6 @@ void PegSolitaire::undoMove(move_type move) {
 }
 
 void PegSolitaire::fillLegalMoves() {
-    // legalMoves.clear();
     legalMoves = shared_ptr<vector<move_type>>(new vector<move_type>);
     int num_cols = MAX_COL_SMALL;
     for(int row = 0; row < MAX_ROW; row++) {
