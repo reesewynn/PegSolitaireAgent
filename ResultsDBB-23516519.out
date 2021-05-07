@@ -1,0 +1,11 @@
+make: Nothing to be done for `all'.
+Depth Bound Branching Approach
+Number of threads =  32
+OMP_SCHEDULE =  static
+terminate called recursively
+terminate called recursively
+/var/spool/slurmd/job23516519/slurm_script: line 37: 24233 Aborted                 ./play_peg parallel_dbb "${BOARD}"
+
+real	0m0.044s
+user	0m0.000s
+sys	0m0.009s

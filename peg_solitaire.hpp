@@ -46,7 +46,7 @@ typedef pair<int, int> location;
 typedef pair<location, direction> move_type;
 
 class PegSolitaire : public Board<move_type, bitset<BOARD_SIZE>> {
-private:
+protected:
     location findDest(const move_type& move, int hop_count = 2);
     bool isLegalMove(const move_type& move);
     shared_ptr<vector<move_type>> legalMoves;
@@ -63,6 +63,8 @@ public:
     bool isTerminal() override;
     bool isWon();
     void setLegalMoves(shared_ptr<vector<move_type>> new_moves); 
+    void setState(bitset<BOARD_SIZE> newState);
+    bitset<BOARD_SIZE> getState();
 };
 
 

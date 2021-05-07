@@ -167,3 +167,10 @@ ostream& operator<<(ostream &os, const direction& dir) {
     }
     return os;
 }
+
+void PegSolitaire::setState(bitset<BOARD_SIZE> newState) {
+    this->gameState = newState;
+}
+bitset<BOARD_SIZE> PegSolitaire::getState() {
+    return gameState;
+}

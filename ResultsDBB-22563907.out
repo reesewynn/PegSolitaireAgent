@@ -1,0 +1,5 @@
+make: Nothing to be done for `all'.
+Depth Bound Branching Approach
+Number of threads =  32
+OMP_SCHEDULE =  static
+slurmstepd: error: *** JOB 22563907 ON c01n05 CANCELLED AT 2021-05-05T19:00:49 DUE TO TIME LIMIT ***
