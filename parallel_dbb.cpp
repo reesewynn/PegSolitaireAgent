@@ -94,7 +94,6 @@ bool DepthBoundBranchingAgent::backtrackWithDepth(int depth) {
                     threadSolutions[i].pop();
                 }
                 solution.push(move_type(lastMoves[i]));
-                // cout << "FOUND ONE" << endl;
                 return true;
             }
         }

@@ -13,7 +13,7 @@ class DepthBoundBranchingAgent {
 private:
     bitset<BOARD_SIZE> goalState;
     PegSolitaire initBoard;
-    int numThreads = 32, maxBranchDepth = 8;
+    int numThreads = 32, maxBranchDepth = 5;
     bool *threadFoundSolutions;
     move_type *lastMoves;
     PegSolitaire *threadBoards;

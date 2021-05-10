@@ -5,7 +5,7 @@ BINARIES = play_peg
 
 all: play_peg
 
-play_peg: play_peg.o board.o peg_solitaire.o serial_search.o parallel_dbb.o
+play_peg: play_peg.o board.o peg_solitaire.o serial_search.o parallel_dbb.o serial_astar.o
 	$(CC) $(CFLAGS) $^ -o $@
 
 # peg_solitaire: board.o

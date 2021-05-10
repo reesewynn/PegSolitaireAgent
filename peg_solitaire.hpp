@@ -52,6 +52,7 @@ protected:
     shared_ptr<vector<move_type>> legalMoves;
     bool movesFound = false;
     void fillLegalMoves();
+    
 public:
     PegSolitaire();
     PegSolitaire(bitset<BOARD_SIZE> inputBoard);

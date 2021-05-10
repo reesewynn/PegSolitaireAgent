@@ -1,0 +1,31 @@
+    // class Compare {
+    // public:
+    //     // SerialAStarAgent* t;
+    //     // Compare(SerialAStarAgent* &t2) : t(t2) {}
+    //     unordered_map<priority_queue_type, compare_type> *f;
+    //     Compare(unordered_map<priority_queue_type, compare_type> &f2) : f(&f2) {}
+    //     inline bool operator() (priority_queue_type const& a, priority_queue_type const& b) {
+    //         // should return true if a is correctly ordered in front of b
+    //         //  we want a min heap. so a < b? TODO: Check
+    //         // find f val of a, f val of b
+    //         // compare_type a_val = t->getFScore(a);
+    //         // compare_type b_val = t->getFScore(b);
+    //         compare_type a_val = (*f)[a];
+    //         compare_type b_val = (*f)[b];
+
+    //         return a_val < b_val;
+
+    //     };
+    // };
+    // auto comp = [this] (priority_queue_type const& a, priority_queue_type const& b) {
+    //     return this->getFScore(a) <= this->getFScore(b);
+    // }
+
+    // auto compare = [](priority_queue_type const& a, priority_queue_type const& b) {
+    //     return getFScore(a) <= getFScore(b);
+    // }
+
+    // inline bool compare(priority_queue_type const& a, priority_queue_type const& b) {
+    //     auto x = &SerialAStarAgent::getFScore;
+    //     return this->getFScore(a) <= this->getFScore(b);
+    // };
