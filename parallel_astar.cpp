@@ -1,19 +1,36 @@
-#include "serial_astar.hpp"
+#include "parallel_astar.hpp"
 
-SerialAStarAgent::SerialAStarAgent() {
+compare_type ParallelAStarAgent::getGScore(const priority_queue_type& board) {
+    return (g.contains(board))? g[board] : INFINITY;
+}
+
+compare_type ParallelAStarAgent::getFScore(const priority_queue_type& board) {
+    return (f.contains(board))? f[board] : INFINITY;
+}
+
+void ParallelAStarAgent::initLocks() {
+    omp_init_lock(&f_lock);
+    omp_init_lock(&g_lock);
+    omp_init_lock(&pq_lock);
+    // omp_init_lock(&sol_lock);
+}
+
+ParallelAStarAgent::ParallelAStarAgent() {
     goalState.set(CENTER_IDX);
     bitset<BOARD_SIZE> b;
     for(int i = 0; i < BOARD_SIZE; i++) if (i != CENTER_IDX) b.set(i);
 
     initBoard.setState(b);
+    initLocks();
 }
 
-SerialAStarAgent::SerialAStarAgent(PegSolitaire &startingBoard) {
+ParallelAStarAgent::ParallelAStarAgent(PegSolitaire &startingBoard) {
     initBoard = startingBoard;
     goalState.set(CENTER_IDX);
+    initLocks();
 }
 
-void SerialAStarAgent::buildPath(const priority_queue_type& endNode) {
+void ParallelAStarAgent::buildPath(const priority_queue_type& endNode) {
     PegSolitaire boardState = PegSolitaire(endNode);
     while (cameFrom.contains(boardState.getState())) {
         auto usedMove = cameFrom[boardState.getState()];
@@ -22,15 +39,7 @@ void SerialAStarAgent::buildPath(const priority_queue_type& endNode) {
     }
 }
 
-compare_type SerialAStarAgent::getGScore(const priority_queue_type& board) {
-    return (g.contains(board))? g[board] : INFINITY;
-}
-
-compare_type SerialAStarAgent::getFScore(const priority_queue_type& board) {
-    return (f.contains(board))? f[board] : INFINITY;
-}
-
-bool SerialAStarAgent::search() {
+bool ParallelAStarAgent::search() {
     // priority_queue<priority_queue_type, vector<priority_queue_type>, Compare> openSet(Compare(f));
     auto cmp = [this](priority_queue_type const& a, priority_queue_type const& b) -> bool {
         return this->getFScore(a) >= this->getFScore(b);
@@ -55,7 +64,12 @@ bool SerialAStarAgent::search() {
         }
         isInOpenSet[current.getState()] = false;
         
-        for (auto move : *current.getLegalMoves()) {
+        vector<move_type> moves = *current.getLegalMoves();
+        int size = moves.size();
+        
+        #pragma omp parallel for shared(openSet, isInOpenSet, g_lock, f_lock, pq_lock)
+        for (int i = 0; i < size; i++) {
+            auto move = moves[i];
             // apply move
             PegSolitaire newState = current; // doesn't recompute moves until ready
             newState.executeMove(move);
@@ -66,13 +80,19 @@ bool SerialAStarAgent::search() {
             
             // if better, record it!
             if (tentativeGScore < getGScore(state)) {
+                omp_set_lock(&g_lock);
                 g[state] = tentativeGScore;
+                omp_unset_lock(&g_lock);
+                omp_set_lock(&f_lock);
                 f[state] = tentativeGScore + heuristic(state);
+                omp_unset_lock(&f_lock);
+                omp_set_lock(&pq_lock);
                 if (!isInOpenSet.contains(state)) {
                     openSet.push(state);
                     isInOpenSet[state] = true;
                 }
                 cameFrom[state] = move;
+                omp_unset_lock(&pq_lock);
             }
         }
 
@@ -81,8 +101,7 @@ bool SerialAStarAgent::search() {
     return false;
 }
 
-float SerialAStarAgent::heuristic(bitset<BOARD_SIZE> b) {
-    // return 0;
+float ParallelAStarAgent::heuristic(bitset<BOARD_SIZE> b) {
     int count = 0;
     for (int i = 0; i < BOARD_SIZE; i++) {
         if (b[i] == goalState[i]) count++;
@@ -90,6 +109,6 @@ float SerialAStarAgent::heuristic(bitset<BOARD_SIZE> b) {
     return count;
 }
 
-stack<move_type> SerialAStarAgent::getSolution() {
+stack<move_type> ParallelAStarAgent::getSolution() {
     return solution;
 }

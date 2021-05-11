@@ -2,6 +2,7 @@
 #include "serial_search.hpp"
 #include "parallel_dbb.hpp"
 #include "serial_astar.hpp"
+#include "parallel_astar.hpp"
 #include <iostream>
 #include <stack>
 #include <cstring>
@@ -58,6 +59,22 @@ void serial_astar(PegSolitaire pegBoard) {
     }
 }
 
+void parallel_astar(PegSolitaire pegBoard) {
+    ParallelAStarAgent agent(pegBoard);
+    if (agent.search()) {
+        auto path = agent.getSolution();
+        if (!path.empty()) {
+            while (!path.empty()) {
+                cout << path.top() << endl;
+                path.pop();
+            }
+        }
+        else {
+            cout << "NO SOLUTION" << endl;
+        }
+    }
+}
+
 
 int main(int argc, char** argv) {
     PegSolitaire pegBoard;
@@ -88,5 +105,8 @@ int main(int argc, char** argv) {
     }
     else if (!strcmp(argv[1], "parallel_dbb")) {
         parallel_dbb(pegBoard);
+    }
+    else if (!strcmp(argv[1], "parallel_astar")) {
+        parallel_astar(pegBoard);
     }
 }
