@@ -1,5 +1,5 @@
-CC = icpc
-CFLAGS = -std=c++20 -O3 -g -fopenmp
+CC = g++
+CFLAGS = --std=c++20 -O0 -g -fopenmp
 
 BINARIES = play_peg
 GAME_DEPENDENCIES = board peg_solitaire

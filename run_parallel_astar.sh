@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --partition=cpsc424
-#SBATCH --cpus-per-task=1
+#SBATCH --cpus-per-task=20
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --time=10:00:00

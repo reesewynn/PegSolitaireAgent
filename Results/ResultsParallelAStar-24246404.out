@@ -1,0 +1,33 @@
+make: Nothing to be done for `all'.
+Parallel A Star Approach
+Number of threads =  1
+OMP_SCHEDULE =  static
+   000    101  0000000  1100011  1111111    111    111 
+/var/spool/slurmd/job24246404/slurm_script: line 30: 14682 Segmentation fault      ./play_peg parallel_astar "${BOARD}"
+
+real	0m0.017s
+user	0m0.003s
+sys	0m0.012s
+SERIAL A Star Approach
+x: 3 y: 0 dir: EAST
+x: 4 y: 2 dir: NORTH
+x: 1 y: 0 dir: SOUTH
+x: 3 y: 6 dir: WEST
+x: 4 y: 4 dir: NORTH
+x: 1 y: 2 dir: SOUTH
+x: 6 y: 0 dir: NORTH
+x: 3 y: 2 dir: SOUTH
+x: 6 y: 2 dir: NORTH
+x: 3 y: 4 dir: SOUTH
+x: 4 y: 0 dir: EAST
+x: 4 y: 2 dir: SOUTH
+x: 4 y: 6 dir: WEST
+x: 4 y: 3 dir: EAST
+x: 6 y: 0 dir: EAST
+x: 6 y: 2 dir: NORTH
+x: 4 y: 5 dir: WEST
+x: 5 y: 1 dir: NORTH
+
+real	0m2.887s
+user	0m2.857s
+sys	0m0.030s

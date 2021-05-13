@@ -1,0 +1,11 @@
+make: Nothing to be done for `all'.
+Parallel A Star Approach
+Number of threads =  1
+OMP_SCHEDULE =  static
+   000    101  0000000  1100011  1111111    111    111 
+==16125== Memcheck, a memory error detector
+==16125== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==16125== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==16125== Command: ./play_peg parallel_astar \ \ \ 000\ \ \ \ 101\ \ 0000000\ \ 1100011\ \ 1111111\ \ \ \ 111\ \ \ \ 111\ 
+==16125== 
+slurmstepd: error: *** JOB 24246722 ON c08n02 CANCELLED AT 2021-05-13T02:28:29 ***

@@ -1,0 +1,159 @@
+make: Nothing to be done for `all'.
+Parallel A Star Approach
+Number of threads =  1
+OMP_SCHEDULE =  static
+   000    101  0000000  1100011  1111111    111    111 
+==10322== Memcheck, a memory error detector
+==10322== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==10322== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==10322== Command: ./play_peg parallel_astar \ \ \ 000\ \ \ \ 101\ \ 0000000\ \ 1100011\ \ 1111111\ \ \ \ 111\ \ \ \ 111\ 
+==10322== 
+==10322== Conditional jump or move depends on uninitialised value(s)
+==10322==    at 0x412578: std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >& std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::emplace_back<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > >(std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >&&) (vector.tcc:112)
+==10322==    by 0x412155: std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::push_back(std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >&&) (stl_vector.h:1204)
+==10322==    by 0x410DBA: ParallelAStarAgent::search() (parallel_astar_tasks.cpp:97)
+==10322==    by 0x413CFA: parallel_astar(PegSolitaire) (play_peg.cpp:64)
+==10322==    by 0x4140E0: main (play_peg.cpp:113)
+==10322== 
+==10322== Conditional jump or move depends on uninitialised value(s)
+==10322==    at 0x412EE0: std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::_M_check_len(unsigned long, char const*) const (stl_vector.h:1758)
+==10322==    by 0x412AE8: void std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::_M_realloc_insert<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > >(__gnu_cxx::__normal_iterator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >*, std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > > >, std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >&&) (vector.tcc:436)
+==10322==    by 0x4125E5: std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >& std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::emplace_back<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > >(std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >&&) (vector.tcc:121)
+==10322==    by 0x412155: std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::push_back(std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >&&) (stl_vector.h:1204)
+==10322==    by 0x410DBA: ParallelAStarAgent::search() (parallel_astar_tasks.cpp:97)
+==10322==    by 0x413CFA: parallel_astar(PegSolitaire) (play_peg.cpp:64)
+==10322==    by 0x4140E0: main (play_peg.cpp:113)
+==10322== 
+==10322== Conditional jump or move depends on uninitialised value(s)
+==10322==    at 0x4040CB: unsigned long const& std::max<unsigned long>(unsigned long const&, unsigned long const&) (stl_algobase.h:259)
+==10322==    by 0x412F1F: std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::_M_check_len(unsigned long, char const*) const (stl_vector.h:1761)
+==10322==    by 0x412AE8: void std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::_M_realloc_insert<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > >(__gnu_cxx::__normal_iterator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >*, std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > > >, std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >&&) (vector.tcc:436)
+==10322==    by 0x4125E5: std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >& std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::emplace_back<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > >(std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >&&) (vector.tcc:121)
+==10322==    by 0x412155: std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::push_back(std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >&&) (stl_vector.h:1204)
+==10322==    by 0x410DBA: ParallelAStarAgent::search() (parallel_astar_tasks.cpp:97)
+==10322==    by 0x413CFA: parallel_astar(PegSolitaire) (play_peg.cpp:64)
+==10322==    by 0x4140E0: main (play_peg.cpp:113)
+==10322== 
+==10322== Conditional jump or move depends on uninitialised value(s)
+==10322==    at 0x412F3A: std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::_M_check_len(unsigned long, char const*) const (stl_vector.h:1762)
+==10322==    by 0x412AE8: void std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::_M_realloc_insert<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > >(__gnu_cxx::__normal_iterator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >*, std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > > >, std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >&&) (vector.tcc:436)
+==10322==    by 0x4125E5: std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >& std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::emplace_back<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > >(std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >&&) (vector.tcc:121)
+==10322==    by 0x412155: std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::push_back(std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >&&) (stl_vector.h:1204)
+==10322==    by 0x410DBA: ParallelAStarAgent::search() (parallel_astar_tasks.cpp:97)
+==10322==    by 0x413CFA: parallel_astar(PegSolitaire) (play_peg.cpp:64)
+==10322==    by 0x4140E0: main (play_peg.cpp:113)
+==10322== 
+==10322== Conditional jump or move depends on uninitialised value(s)
+==10322==    at 0x412F4C: std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::_M_check_len(unsigned long, char const*) const (stl_vector.h:1762)
+==10322==    by 0x412AE8: void std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::_M_realloc_insert<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > >(__gnu_cxx::__normal_iterator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >*, std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > > >, std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >&&) (vector.tcc:436)
+==10322==    by 0x4125E5: std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >& std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::emplace_back<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > >(std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >&&) (vector.tcc:121)
+==10322==    by 0x412155: std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::push_back(std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >&&) (stl_vector.h:1204)
+==10322==    by 0x410DBA: ParallelAStarAgent::search() (parallel_astar_tasks.cpp:97)
+==10322==    by 0x413CFA: parallel_astar(PegSolitaire) (play_peg.cpp:64)
+==10322==    by 0x4140E0: main (play_peg.cpp:113)
+==10322== 
+==10322== Conditional jump or move depends on uninitialised value(s)
+==10322==    at 0x412FBB: std::_Vector_base<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::_M_allocate(unsigned long) (stl_vector.h:346)
+==10322==    by 0x412B3D: void std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::_M_realloc_insert<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > >(__gnu_cxx::__normal_iterator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >*, std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > > >, std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >&&) (vector.tcc:440)
+==10322==    by 0x4125E5: std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >& std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::emplace_back<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > >(std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >&&) (vector.tcc:121)
+==10322==    by 0x412155: std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::push_back(std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >&&) (stl_vector.h:1204)
+==10322==    by 0x410DBA: ParallelAStarAgent::search() (parallel_astar_tasks.cpp:97)
+==10322==    by 0x413CFA: parallel_astar(PegSolitaire) (play_peg.cpp:64)
+==10322==    by 0x4140E0: main (play_peg.cpp:113)
+==10322== 
+==10322== Conditional jump or move depends on uninitialised value(s)
+==10322==    at 0x413771: __gnu_cxx::new_allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > >::allocate(unsigned long, void const*) (new_allocator.h:105)
+==10322==    by 0x4133B0: allocate (allocator.h:173)
+==10322==    by 0x4133B0: std::allocator_traits<std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::allocate(std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > >&, unsigned long) (alloc_traits.h:460)
+==10322==    by 0x412FCF: std::_Vector_base<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::_M_allocate(unsigned long) (stl_vector.h:346)
+==10322==    by 0x412B3D: void std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::_M_realloc_insert<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > >(__gnu_cxx::__normal_iterator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >*, std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > > >, std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >&&) (vector.tcc:440)
+==10322==    by 0x4125E5: std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >& std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::emplace_back<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > >(std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >&&) (vector.tcc:121)
+==10322==    by 0x412155: std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::push_back(std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >&&) (stl_vector.h:1204)
+==10322==    by 0x410DBA: ParallelAStarAgent::search() (parallel_astar_tasks.cpp:97)
+==10322==    by 0x413CFA: parallel_astar(PegSolitaire) (play_peg.cpp:64)
+==10322==    by 0x4140E0: main (play_peg.cpp:113)
+==10322== 
+==10322== Conditional jump or move depends on uninitialised value(s)
+==10322==    at 0x4C2A529: operator new(unsigned long) (vg_replace_malloc.c:344)
+==10322==    by 0x413787: __gnu_cxx::new_allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > >::allocate(unsigned long, void const*) (new_allocator.h:115)
+==10322==    by 0x4133B0: allocate (allocator.h:173)
+==10322==    by 0x4133B0: std::allocator_traits<std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::allocate(std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > >&, unsigned long) (alloc_traits.h:460)
+==10322==    by 0x412FCF: std::_Vector_base<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::_M_allocate(unsigned long) (stl_vector.h:346)
+==10322==    by 0x412B3D: void std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::_M_realloc_insert<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > >(__gnu_cxx::__normal_iterator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >*, std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > > >, std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >&&) (vector.tcc:440)
+==10322==    by 0x4125E5: std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >& std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::emplace_back<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > >(std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >&&) (vector.tcc:121)
+==10322==    by 0x412155: std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::push_back(std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >&&) (stl_vector.h:1204)
+==10322==    by 0x410DBA: ParallelAStarAgent::search() (parallel_astar_tasks.cpp:97)
+==10322==    by 0x413CFA: parallel_astar(PegSolitaire) (play_peg.cpp:64)
+==10322==    by 0x4140E0: main (play_peg.cpp:113)
+==10322== 
+==10322== Use of uninitialised value of size 8
+==10322==    at 0x412A67: decltype (::new ((void*)(0)) std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >((declval<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > >)())) std::construct_at<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > >(std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >*, std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >&&) (stl_construct.h:97)
+==10322==    by 0x412ABA: void std::allocator_traits<std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::construct<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > >(std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > >&, std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >*, std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >&&) (alloc_traits.h:514)
+==10322==    by 0x412B79: void std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::_M_realloc_insert<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > >(__gnu_cxx::__normal_iterator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >*, std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > > >, std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >&&) (vector.tcc:449)
+==10322==    by 0x4125E5: std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >& std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::emplace_back<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > >(std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >&&) (vector.tcc:121)
+==10322==    by 0x412155: std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::push_back(std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >&&) (stl_vector.h:1204)
+==10322==    by 0x410DBA: ParallelAStarAgent::search() (parallel_astar_tasks.cpp:97)
+==10322==    by 0x413CFA: parallel_astar(PegSolitaire) (play_peg.cpp:64)
+==10322==    by 0x4140E0: main (play_peg.cpp:113)
+==10322== 
+==10322== Conditional jump or move depends on uninitialised value(s)
+==10322==    at 0x4137C2: std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >* std::__relocate_a_1<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >*, std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >*, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >(std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >*, std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >*, std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >*, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > >&) (stl_uninitialized.h:1013)
+==10322==    by 0x413604: std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >* std::__relocate_a<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >*, std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >*, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >(std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >*, std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >*, std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >*, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > >&) (stl_uninitialized.h:1028)
+==10322==    by 0x4133E3: std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::_S_do_relocate(std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >*, std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >*, std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >*, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > >&, std::integral_constant<bool, true>) (stl_vector.h:456)
+==10322==    by 0x413008: std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::_S_relocate(std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >*, std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >*, std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >*, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > >&) (stl_vector.h:469)
+==10322==    by 0x412BB2: void std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::_M_realloc_insert<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > >(__gnu_cxx::__normal_iterator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >*, std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > > >, std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >&&) (vector.tcc:461)
+==10322==    by 0x4125E5: std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >& std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::emplace_back<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > >(std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >&&) (vector.tcc:121)
+==10322==    by 0x412155: std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::push_back(std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >&&) (stl_vector.h:1204)
+==10322==    by 0x410DBA: ParallelAStarAgent::search() (parallel_astar_tasks.cpp:97)
+==10322==    by 0x413CFA: parallel_astar(PegSolitaire) (play_peg.cpp:64)
+==10322==    by 0x4140E0: main (play_peg.cpp:113)
+==10322== 
+==10322== Conditional jump or move depends on uninitialised value(s)
+==10322==    at 0x412D55: std::_Vector_base<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::_M_deallocate(std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >*, unsigned long) (stl_vector.h:353)
+==10322==    by 0x412C13: void std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::_M_realloc_insert<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > >(__gnu_cxx::__normal_iterator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >*, std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > > >, std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >&&) (vector.tcc:500)
+==10322==    by 0x4125E5: std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >& std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::emplace_back<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > >(std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >&&) (vector.tcc:121)
+==10322==    by 0x412155: std::vector<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >, std::allocator<std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> > > >::push_back(std::pair<std::pair<std::bitset<33ul>, float>, std::pair<std::pair<int, int>, direction> >&&) (stl_vector.h:1204)
+==10322==    by 0x410DBA: ParallelAStarAgent::search() (parallel_astar_tasks.cpp:97)
+==10322==    by 0x413CFA: parallel_astar(PegSolitaire) (play_peg.cpp:64)
+==10322==    by 0x4140E0: main (play_peg.cpp:113)
+==10322== 
+NO SOLUTION
+==10322== 
+==10322== HEAP SUMMARY:
+==10322==     in use at exit: 520 bytes in 2 blocks
+==10322==   total heap usage: 45 allocs, 43 frees, 109,232 bytes allocated
+==10322== 
+==10322== LEAK SUMMARY:
+==10322==    definitely lost: 512 bytes in 1 blocks
+==10322==    indirectly lost: 0 bytes in 0 blocks
+==10322==      possibly lost: 0 bytes in 0 blocks
+==10322==    still reachable: 8 bytes in 1 blocks
+==10322==         suppressed: 0 bytes in 0 blocks
+==10322== Rerun with --leak-check=full to see details of leaked memory
+==10322== 
+==10322== Use --track-origins=yes to see where uninitialised values come from
+==10322== For lists of detected and suppressed errors, rerun with: -s
+==10322== ERROR SUMMARY: 13 errors from 11 contexts (suppressed: 0 from 0)
+SERIAL A Star Approach
+x: 3 y: 0 dir: EAST
+x: 4 y: 2 dir: NORTH
+x: 1 y: 0 dir: SOUTH
+x: 3 y: 6 dir: WEST
+x: 4 y: 4 dir: NORTH
+x: 1 y: 2 dir: SOUTH
+x: 6 y: 0 dir: NORTH
+x: 3 y: 2 dir: SOUTH
+x: 6 y: 2 dir: NORTH
+x: 3 y: 4 dir: SOUTH
+x: 4 y: 0 dir: EAST
+x: 4 y: 2 dir: SOUTH
+x: 4 y: 6 dir: WEST
+x: 4 y: 3 dir: EAST
+x: 6 y: 0 dir: EAST
+x: 6 y: 2 dir: NORTH
+x: 4 y: 5 dir: WEST
+x: 5 y: 1 dir: NORTH
+
+real	0m2.890s
+user	0m2.867s
+sys	0m0.023s
