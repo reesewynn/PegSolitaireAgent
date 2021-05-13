@@ -6,7 +6,8 @@
 #include "peg_solitaire.hpp"
 
 
-using std::cout, std::stack, std::bitset, std::endl;
+// using std::cout, std::stack, std::bitset, std::endl;
+using std::cout; using std::stack; using std::bitset; using std::endl;
 
 class DepthBoundBranchingAgent {
 

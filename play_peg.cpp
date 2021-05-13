@@ -73,6 +73,9 @@ void parallel_astar(PegSolitaire pegBoard) {
             cout << "NO SOLUTION" << endl;
         }
     }
+    else {
+        cout << "NO SOLUTION" << endl;
+    }
 }
 
 

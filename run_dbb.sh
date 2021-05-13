@@ -8,7 +8,7 @@
 #SBATCH --mem-per-cpu=5000
 ##SBATCH --exclusive
 #SBATCH --job-name=DepthBoundBranching
-#SBATCH --output=ResultsDBB-%j.out
+#SBATCH --output=Results/ResultsDBB-%j.out
 
 make
 

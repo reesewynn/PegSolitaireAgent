@@ -3,3 +3,5 @@ test_board.txt
 *.o
 ./play_peg
 .vscode/*
+
+Scratch/*

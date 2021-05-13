@@ -3,7 +3,8 @@
 #include <vector>
 #include <memory>
 
-using std::vector, std::shared_ptr;
+// using std::vector, std::shared_ptr;
+using std::vector; using std::shared_ptr;
 
 template <typename Move, typename State>
 class Board {

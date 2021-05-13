@@ -8,7 +8,7 @@
 #SBATCH --mem-per-cpu=5000
 ##SBATCH --exclusive
 #SBATCH --job-name=SerialBacktrack
-#SBATCH --output=ResultsSerial-%j.out
+#SBATCH --output=Results/ResultsSerial-%j.out
 
 make
 

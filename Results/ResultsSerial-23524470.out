@@ -1,0 +1,25 @@
+make: Nothing to be done for `all'.
+SERIAL BACKTRACKING APPROACH
+  000   101 0000000 1100011 1111111   111   111 
+x: 3 y: 0 dir: EAST
+x: 3 y: 6 dir: WEST
+x: 4 y: 2 dir: NORTH
+x: 1 y: 0 dir: SOUTH
+x: 4 y: 4 dir: NORTH
+x: 1 y: 2 dir: SOUTH
+x: 4 y: 6 dir: WEST
+x: 5 y: 1 dir: NORTH
+x: 3 y: 3 dir: EAST
+x: 6 y: 2 dir: NORTH
+x: 3 y: 2 dir: SOUTH
+x: 4 y: 0 dir: EAST
+x: 5 y: 0 dir: NORTH
+x: 6 y: 0 dir: EAST
+x: 6 y: 2 dir: NORTH
+x: 3 y: 2 dir: SOUTH
+x: 5 y: 2 dir: NORTH
+x: 3 y: 5 dir: WEST
+
+real	0m6.212s
+user	0m6.116s
+sys	0m0.007s

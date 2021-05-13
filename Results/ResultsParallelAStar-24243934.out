@@ -1,0 +1,5 @@
+make: Nothing to be done for `all'.
+Parallel A Star Approach
+Number of threads =  1
+OMP_SCHEDULE =  static
+   000    101  0000000  1100011  1111111    111    111 

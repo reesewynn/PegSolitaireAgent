@@ -9,8 +9,10 @@
 #include <unordered_map>
 #define INFINITY (std::numeric_limits<double>::infinity())
 
-using std::stack, std::bitset, std::priority_queue, std::unordered_map;
-using std::pair, std::vector;//, std::numeric_limits<double>::infinity;
+// using std::stack, std::bitset, std::priority_queue, std::unordered_map;
+// using std::pair, std::vector;//, std::numeric_limits<double>::infinity;
+using std::stack; using std::bitset; using std::priority_queue; using std::unordered_map;
+using std::pair; using std::vector;//, std::numeric_limits<double>::infinity;
 
 #define compare_type float
 
@@ -28,16 +30,18 @@ private:
 
     unordered_map<priority_queue_type, compare_type> f, g;
     unordered_map<priority_queue_type, move_type> cameFrom;
-    
-    void buildPath(const priority_queue_type& endNode);
 
+    compare_type manhattan(const bitset<BOARD_SIZE>& goal, const bitset<BOARD_SIZE>& eval);
+    compare_type matched(const bitset<BOARD_SIZE>& goal, const bitset<BOARD_SIZE>& eval);
+
+    void buildPath(const priority_queue_type& endNode);
 public:
     SerialAStarAgent();
     SerialAStarAgent(PegSolitaire &startingBoard);
     
     bool search();
 
-    float heuristic(bitset<BOARD_SIZE> b);
+    compare_type heuristic(bitset<BOARD_SIZE> b);
 
     stack<move_type> getSolution();
 

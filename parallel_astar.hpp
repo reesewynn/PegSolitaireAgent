@@ -10,8 +10,11 @@
 #include <unordered_map>
 #define INFINITY (std::numeric_limits<double>::infinity())
 
-using std::stack, std::bitset, std::priority_queue, std::unordered_map;
-using std::pair, std::vector;//, std::numeric_limits<double>::infinity;
+// using std::stack, std::bitset, std::priority_queue, std::unordered_map;
+// using std::pair, std::vector;//, std::numeric_limits<double>::infinity;
+using std::stack; using std::bitset; using std::priority_queue; using std::unordered_map;
+using std::pair; using std::vector;//, std::numeric_limits<double>::infinity;
+
 
 #define compare_type float
 
@@ -34,8 +37,15 @@ private:
     
     void buildPath(const priority_queue_type& endNode);
 
+    compare_type manhattan(const bitset<BOARD_SIZE>& goal, const bitset<BOARD_SIZE>& eval);
+    compare_type matched(const bitset<BOARD_SIZE>& goal, const bitset<BOARD_SIZE>& eval);
+
+    // FOR LOCK APPROACH
     omp_lock_t f_lock, g_lock, pq_lock;
     omp_lock_t sol_lock;
+
+    // FOR TASKS APPROACH
+    // vector<pair<priority_queue_type&, compare_type>>& expandNode(PegSolitaire &node);
 
 public:
     ParallelAStarAgent();
@@ -43,7 +53,7 @@ public:
     
     bool search();
 
-    float heuristic(bitset<BOARD_SIZE> b);
+    compare_type heuristic(bitset<BOARD_SIZE> b);
 
     stack<move_type> getSolution();
 

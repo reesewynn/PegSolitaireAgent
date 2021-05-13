@@ -6,7 +6,10 @@
 #include <memory>
 #include "board.hpp"
 
-using std::bitset, std::string, std::pair, std::ostream;
+// using std::bitset, std::string, std::pair, std::ostream;
+// using std::shared_ptr;
+
+using std::bitset; using std::string; using std::pair; using std::ostream;
 using std::shared_ptr;
 
 #define BOARD_SIZE 33
@@ -28,9 +31,18 @@ using std::shared_ptr;
 
 
 #define DY_OFFSET(x, dx) \
-    (((x == MIDDLE_LEFT - 1 && dx == 1) || (x == MIDDLE_RIGHT && dx == -1))? \
+    (((x < MIDDLE_LEFT && x + dx >= MIDDLE_LEFT) || (x >= MIDDLE_RIGHT && x + dx < MIDDLE_RIGHT))? \
         MIDDLE_LEFT : \
-        0)
+        (x >= MIDDLE_LEFT && x + dx < MIDDLE_LEFT) || (x <= MIDDLE_RIGHT - 1 && x + dx >= MIDDLE_RIGHT)? \
+        (-1*MIDDLE_LEFT) : 0)
+
+
+#define GET_ROW(x) \
+    ((x < MAX_COL_SMALL)? 0 : (x < MAX_COL_SMALL * 2)? 1 : \
+    (x < TOP_ROWS_COUNT + MIDDLE_RIGHT)? 2 : (x < TOP_ROWS_COUNT + MIDDLE_RIGHT * 2)? 3 : \
+    (x < TOP_AND_MIDDLE_COUNT + MAX_COL_SMALL)? 4 : \
+    (x < TOP_AND_MIDDLE_COUNT + MAX_COL_SMALL * 2)? 5 : 6) 
+
 
 
 #define CENTER_IDX (ROW_IDX(CENTER) + CENTER)
@@ -50,7 +62,7 @@ protected:
     location findDest(const move_type& move, int hop_count = 2);
     bool isLegalMove(const move_type& move);
     shared_ptr<vector<move_type>> legalMoves;
-    bool movesFound = false;
+    bool movesFound = false, isReverseAgent = false;
     void fillLegalMoves();
     
 public:

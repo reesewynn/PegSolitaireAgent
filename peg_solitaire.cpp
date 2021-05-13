@@ -42,12 +42,12 @@ location PegSolitaire::findDest(const move_type& move, int hop_count) {
     int dx = (move.second == NORTH)? -1 : (move.second == SOUTH)? 1 : 0;
 
     const int move_x = (move.first).first, move_y = move.first.second;
-    int offset = DY_OFFSET(move_x, dx); // necessary for indexing
+    int offset = DY_OFFSET(move_x, (dx * hop_count)); // necessary for indexing
     return location(move_x + (dx * hop_count), move_y + (dy * hop_count) + offset); // *2 for hop
 }
 
 bool PegSolitaire::isLegalMove(const move_type& move) {
-    const location dest = this->findDest(move);
+    const location dest = this->findDest(move, 2); // orig: no 2
     int dest_x = dest.first, dest_y = dest.second;
 
     int dy = (move.second == EAST)? 1 : (move.second == WEST)? -1 : 0;
@@ -56,7 +56,7 @@ bool PegSolitaire::isLegalMove(const move_type& move) {
     int init_x = (move.first).first, init_y = move.first.second;
     dy += DY_OFFSET(init_x, dx);
 
-    int isHopped = ROW_IDX(init_x + dx) + init_y + dy;
+    int isHopped = ROW_IDX(init_x + dx) + (init_y + dy);
     int hopTo = ROW_IDX(dest_x) + dest_y;
     if (!isValidLocation(location(init_x, init_y)) || !isValidLocation(dest)) {
         return false; // invalid start or end
