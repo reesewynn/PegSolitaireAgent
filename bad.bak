@@ -1,5 +1,4 @@
-#include "../parallel_astar.hpp"
-#include <math.h>
+#include "parallel_astar.hpp"
 
 compare_type ParallelAStarAgent::getGScore(const priority_queue_type& board) {
     return (g.contains(board))? g[board] : INFINITY;
@@ -13,6 +12,7 @@ void ParallelAStarAgent::initLocks() {
     omp_init_lock(&f_lock);
     omp_init_lock(&g_lock);
     omp_init_lock(&pq_lock);
+    // omp_init_lock(&sol_lock);
 }
 
 ParallelAStarAgent::ParallelAStarAgent() {
@@ -40,6 +40,7 @@ void ParallelAStarAgent::buildPath(const priority_queue_type& endNode) {
 }
 
 bool ParallelAStarAgent::search() {
+    // priority_queue<priority_queue_type, vector<priority_queue_type>, Compare> openSet(Compare(f));
     auto cmp = [this](priority_queue_type const& a, priority_queue_type const& b) -> bool {
         return this->getFScore(a) >= this->getFScore(b);
     };
@@ -100,41 +101,12 @@ bool ParallelAStarAgent::search() {
     return false;
 }
 
-// float ParallelAStarAgent::heuristic(bitset<BOARD_SIZE> b) {
-//     int count = 0;
-//     for (int i = 0; i < BOARD_SIZE; i++) {
-//         if (b[i] == goalState[i]) count++;
-//     }
-//     return count;
-// }
-
-// stack<move_type> ParallelAStarAgent::getSolution() {
-//     return solution;
-// }
-
-compare_type ParallelAStarAgent::manhattan(const bitset<BOARD_SIZE>& goal, const bitset<BOARD_SIZE>& eval) {
-    compare_type count = 0;
-    // evaluate the manhattan distance for all MATCHED slots
-    for (int i = 0; i < BOARD_SIZE; i++) {
-        if (eval[i] != goal[i]) {
-            int row = GET_ROW(i);
-            count += pow(2,std::max(abs(row - CENTER) , abs((i - row) - CENTER)));     
-        }
-    }
-
-    return count;
-}
-compare_type ParallelAStarAgent::matched(const bitset<BOARD_SIZE>& goal, const bitset<BOARD_SIZE>& eval) {
+float ParallelAStarAgent::heuristic(bitset<BOARD_SIZE> b) {
     int count = 0;
     for (int i = 0; i < BOARD_SIZE; i++) {
-        if (eval[i] == goal[i]) count++;
+        if (b[i] == goalState[i]) count++;
     }
     return count;
-}
-
-compare_type ParallelAStarAgent::heuristic(bitset<BOARD_SIZE> b) {
-    // return matched(goalState, b);
-    return manhattan(goalState, b);
 }
 
 stack<move_type> ParallelAStarAgent::getSolution() {

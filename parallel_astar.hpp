@@ -8,6 +8,7 @@
 #include <queue>
 #include <limits>
 #include <unordered_map>
+
 #define INFINITY (std::numeric_limits<double>::infinity())
 
 // using std::stack, std::bitset, std::priority_queue, std::unordered_map;
@@ -43,6 +44,8 @@ private:
     // FOR LOCK APPROACH
     omp_lock_t f_lock, g_lock, pq_lock;
     omp_lock_t sol_lock;
+
+    int max_depth = 0;
 
     // FOR TASKS APPROACH
     // vector<pair<priority_queue_type&, compare_type>>& expandNode(PegSolitaire &node);

@@ -1,5 +1,4 @@
-#include "../parallel_astar.hpp"
-#include <math.h>
+#include "../parallel_astar_fan.hpp"
 
 compare_type ParallelAStarAgent::getGScore(const priority_queue_type& board) {
     return (g.contains(board))? g[board] : INFINITY;
@@ -13,6 +12,7 @@ void ParallelAStarAgent::initLocks() {
     omp_init_lock(&f_lock);
     omp_init_lock(&g_lock);
     omp_init_lock(&pq_lock);
+    // omp_init_lock(&sol_lock);
 }
 
 ParallelAStarAgent::ParallelAStarAgent() {
@@ -39,21 +39,22 @@ void ParallelAStarAgent::buildPath(const priority_queue_type& endNode) {
     }
 }
 
-bool ParallelAStarAgent::search() {
+bool ParallelAStarAgent::singleSearch(PegSolitaire& curr) {
+    // priority_queue<priority_queue_type, vector<priority_queue_type>, Compare> openSet(Compare(f));
     auto cmp = [this](priority_queue_type const& a, priority_queue_type const& b) -> bool {
         return this->getFScore(a) >= this->getFScore(b);
     };
     priority_queue<priority_queue_type, vector<priority_queue_type>, decltype(cmp)> openSet(cmp);
 
 
-    g[initBoard.getState()] = 0; // start with first state
-    f[initBoard.getState()] = heuristic(initBoard.getState());
+    g[curr.getState()] = 0; // start with first state
+    f[curr.getState()] = heuristic(curr.getState());
 
-    openSet.push(initBoard.getState());
+    openSet.push(curr.getState());
     unordered_map<priority_queue_type, bool> isInOpenSet;
-    isInOpenSet[initBoard.getState()] = true;
+    isInOpenSet[curr.getState()] = true;
 
-    while (!openSet.empty()) {
+    while (!openSet.empty() && !(*flag)) {
         // break;
         PegSolitaire current = PegSolitaire(openSet.top()); // make new board, frustrating. I know.
         openSet.pop();
@@ -63,12 +64,7 @@ bool ParallelAStarAgent::search() {
         }
         isInOpenSet[current.getState()] = false;
         
-        vector<move_type> moves = *current.getLegalMoves();
-        int size = moves.size();
-        
-        #pragma omp parallel for shared(openSet, isInOpenSet, g_lock, f_lock, pq_lock)
-        for (int i = 0; i < size; i++) {
-            auto move = moves[i];
+        for (auto move : *current.getLegalMoves()) {
             // apply move
             PegSolitaire newState = current; // doesn't recompute moves until ready
             newState.executeMove(move);
@@ -79,19 +75,13 @@ bool ParallelAStarAgent::search() {
             
             // if better, record it!
             if (tentativeGScore < getGScore(state)) {
-                omp_set_lock(&g_lock);
                 g[state] = tentativeGScore;
-                omp_unset_lock(&g_lock);
-                omp_set_lock(&f_lock);
                 f[state] = tentativeGScore + heuristic(state);
-                omp_unset_lock(&f_lock);
-                omp_set_lock(&pq_lock);
                 if (!isInOpenSet.contains(state)) {
                     openSet.push(state);
                     isInOpenSet[state] = true;
                 }
                 cameFrom[state] = move;
-                omp_unset_lock(&pq_lock);
             }
         }
 
@@ -100,41 +90,43 @@ bool ParallelAStarAgent::search() {
     return false;
 }
 
-// float ParallelAStarAgent::heuristic(bitset<BOARD_SIZE> b) {
-//     int count = 0;
-//     for (int i = 0; i < BOARD_SIZE; i++) {
-//         if (b[i] == goalState[i]) count++;
-//     }
-//     return count;
-// }
+bool ParallelAStarAgent::search() {
 
-// stack<move_type> ParallelAStarAgent::getSolution() {
-//     return solution;
-// }
+    vector<move_type> moves = *(initBoard.getLegalMoves());
+    bool flag = false;
 
-compare_type ParallelAStarAgent::manhattan(const bitset<BOARD_SIZE>& goal, const bitset<BOARD_SIZE>& eval) {
-    compare_type count = 0;
-    // evaluate the manhattan distance for all MATCHED slots
-    for (int i = 0; i < BOARD_SIZE; i++) {
-        if (eval[i] != goal[i]) {
-            int row = GET_ROW(i);
-            count += pow(2,std::max(abs(row - CENTER) , abs((i - row) - CENTER)));     
+    #pragma omp parallel for shared(moves, flag)
+    for(int i = 0; i < moves.size(); i++) {
+        if (flag) continue;
+
+        PegSolitaire copyBoard(initBoard.getState());
+        copyBoard.executeMove(moves[i]);
+
+        // generate serial a* agent, search
+        SerialAStarAgent secretAgent(copyBoard);
+        
+        // if found, mark it
+        if (secretAgent.search()) {
+            #pragma omp critical 
+            {
+                if (!flag) {
+                    flag = true;
+                    std::cout << "FOUND\n";
+                    solution = secretAgent.getSolution();
+                }
+            }
         }
     }
-
-    return count;
+    
+    return flag;
 }
-compare_type ParallelAStarAgent::matched(const bitset<BOARD_SIZE>& goal, const bitset<BOARD_SIZE>& eval) {
+
+float ParallelAStarAgent::heuristic(bitset<BOARD_SIZE> b) {
     int count = 0;
     for (int i = 0; i < BOARD_SIZE; i++) {
-        if (eval[i] == goal[i]) count++;
+        if (b[i] == goalState[i]) count++;
     }
     return count;
-}
-
-compare_type ParallelAStarAgent::heuristic(bitset<BOARD_SIZE> b) {
-    // return matched(goalState, b);
-    return manhattan(goalState, b);
 }
 
 stack<move_type> ParallelAStarAgent::getSolution() {
