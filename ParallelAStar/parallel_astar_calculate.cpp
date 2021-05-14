@@ -112,8 +112,9 @@ compare_type ParallelAStarCalculateAgent::manhattan(const bitset<BOARD_SIZE>& go
 }
 compare_type ParallelAStarCalculateAgent::matched(const bitset<BOARD_SIZE>& goal, const bitset<BOARD_SIZE>& eval) {
     int count = 0;
+    #pragma omp parallel for reduction(+:count)
     for (int i = 0; i < BOARD_SIZE; i++) {
-        if (eval[i] == goal[i]) count++;
+        if (eval[i] != goal[i]) count++;
     }
     return count;
 }

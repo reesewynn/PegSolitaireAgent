@@ -25,7 +25,7 @@ void ParallelAStarTaskAgent::writeGScore(const priority_queue_type& board, compa
 }
 void ParallelAStarTaskAgent::writeFScore(const priority_queue_type& board, compare_type write) {
     std::unique_lock< std::shared_mutex > w(_faccess);
-    g[board] = write;
+    f[board] = write;
 }
 void ParallelAStarTaskAgent::writeIsInOpenSet(const priority_queue_type& board, bool isIn) {
     std::unique_lock< std::shared_mutex > w(_iioaccess);

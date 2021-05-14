@@ -41,8 +41,11 @@ void print_solution(bool solFound, const stack<move_type> *solution, double elap
 
 void serial_backtrack(PegSolitaire &pegBoard) {
     double start = omp_get_wtime();
-    auto path = serial::backtrack(pegBoard);
-    print_solution(true, &path, omp_get_wtime() - start, "serial_backtrack", 1);
+    // auto path = serial::backtrack(pegBoard);
+    SerialBacktrackAgent agent(pegBoard);
+    bool solFound = agent.search();
+    auto path = (solFound)? &(agent.getSolution()) : nullptr;
+    print_solution(true, path, omp_get_wtime() - start, "Serial Backtracking", 1);
 }
 
 void parallel_dbb(PegSolitaire &pegBoard) {
@@ -55,21 +58,25 @@ void parallel_dbb(PegSolitaire &pegBoard) {
 }
 
 void serial_astar(PegSolitaire pegBoard) {
-    double start = omp_get_wtime();
-    SerialAStarAgent agent(pegBoard);
-    bool solFound = agent.search();
-    auto path = (solFound)? &(agent.getSolution()) : nullptr;
-    
-    print_solution(solFound, path, omp_get_wtime() - start, "Serial AStar", 1);
+    try {
+        double start = omp_get_wtime();
+        SerialAStarAgent agent(pegBoard);
+        bool solFound = agent.search();
+        auto path = (solFound)? &(agent.getSolution()) : nullptr;
+        
+        print_solution(solFound, path, omp_get_wtime() - start, "Serial AStar", 1);
+    } catch (...) { }
 }
 
 void parallel_astar_lock(PegSolitaire pegBoard) {
-    double start = omp_get_wtime();
-    ParallelAStarLockAgent agent(pegBoard);
-    bool solFound = agent.search();
-    auto path = (solFound)? &(agent.getSolution()) : nullptr;
-    
-    print_solution(solFound, path, omp_get_wtime() - start, "Parallel AStar With Locks", numThreads);
+    try {
+        double start = omp_get_wtime();
+        ParallelAStarLockAgent agent(pegBoard);
+        bool solFound = agent.search();
+        auto path = (solFound)? &(agent.getSolution()) : nullptr;
+        
+        print_solution(solFound, path, omp_get_wtime() - start, "Parallel AStar With Locks", numThreads);
+    } catch (...) { }
 }
 
 void parallel_astar_critical(PegSolitaire pegBoard) {

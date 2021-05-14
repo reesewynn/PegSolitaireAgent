@@ -2,16 +2,35 @@
 #include <math.h>
 
 compare_type ParallelAStarLockAgent::getGScore(const priority_queue_type& board) {
+    std::shared_lock< std::shared_mutex > r(_gaccess);
     return (g.contains(board))? g[board] : INFINITY;
 }
 
 compare_type ParallelAStarLockAgent::getFScore(const priority_queue_type& board) {
+    std::shared_lock< std::shared_mutex > r(_faccess);
     return (f.contains(board))? f[board] : INFINITY;
 }
 
+bool ParallelAStarLockAgent::getIsInOpenSet(const priority_queue_type item) {
+    std::shared_lock< std::shared_mutex > r(_iioaccess);
+    return isInOpenSet.contains(item);
+}
+
+void ParallelAStarLockAgent::writeGScore(const priority_queue_type& board, compare_type write) {
+    std::unique_lock< std::shared_mutex > w(_gaccess);
+    g[board] = write;
+
+}
+void ParallelAStarLockAgent::writeFScore(const priority_queue_type& board, compare_type write) {
+    std::unique_lock< std::shared_mutex > w(_faccess);
+    g[board] = write;
+}
+void ParallelAStarLockAgent::writeIsInOpenSet(const priority_queue_type& board, bool isIn) {
+    std::unique_lock< std::shared_mutex > w(_iioaccess);
+    isInOpenSet[board] = isIn;
+}
+
 void ParallelAStarLockAgent::initLocks() {
-    omp_init_lock(&f_lock);
-    omp_init_lock(&g_lock);
     omp_init_lock(&pq_lock);
 }
 
@@ -50,7 +69,7 @@ bool ParallelAStarLockAgent::search() {
     f[initBoard.getState()] = heuristic(initBoard.getState());
 
     openSet.push(initBoard.getState());
-    unordered_map<priority_queue_type, bool> isInOpenSet;
+    // unordered_map<priority_queue_type, bool> isInOpenSet;
     isInOpenSet[initBoard.getState()] = true;
 
     while (!openSet.empty()) {
@@ -66,7 +85,7 @@ bool ParallelAStarLockAgent::search() {
         vector<move_type> moves = *current.getLegalMoves();
         int size = moves.size();
         
-        #pragma omp parallel for shared(openSet, isInOpenSet, g_lock, f_lock, pq_lock)
+        #pragma omp parallel for shared(openSet, isInOpenSet, pq_lock)
         for (int i = 0; i < size; i++) {
             auto move = moves[i];
             // apply move
@@ -79,22 +98,32 @@ bool ParallelAStarLockAgent::search() {
             
             // if better, record it!
             if (tentativeGScore < getGScore(state)) {
-                omp_set_lock(&g_lock);
-                g[state] = tentativeGScore;
-                omp_unset_lock(&g_lock);
+                // omp_set_lock(&g_lock);
+                // g[state] = tentativeGScore;
+                writeGScore(state, tentativeGScore);
+                // omp_unset_lock(&g_lock);
+
+
                 // doesn't need to wait
                 compare_type h = heuristic(state);
                 
-                omp_set_lock(&f_lock);
-                f[state] = tentativeGScore + h;
-                omp_unset_lock(&f_lock);
+                // omp_set_lock(&f_lock);
+                // f[state] = tentativeGScore + h;
+                writeFScore(state, h + tentativeGScore);
+                // omp_unset_lock(&f_lock);
+
+
                 omp_set_lock(&pq_lock);
-                if (!isInOpenSet.contains(state)) {
+                // if (!isInOpenSet.contains(state)) {
+                if (!getIsInOpenSet(state)) {
                     openSet.push(state);
                     isInOpenSet[state] = true;
                 }
-                cameFrom[state] = move;
+                
                 omp_unset_lock(&pq_lock);
+
+                #pragma omp critical (cameFrom)
+                cameFrom[state] = move;
             }
         }
 

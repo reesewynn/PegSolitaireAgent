@@ -1,33 +1,47 @@
 #include "serial_search.hpp"
 
-namespace {
-    stack<move_type> path;
-    bool backtrackHelper(PegSolitaire &ps) {
-        if (ps.isWon()) { // successful case
-        return true;
-        }
-        else if (ps.isTerminal()) { // no options and failed
-            return false;
-        }
-
-        // backup the moves to prevent recomputation
-        shared_ptr<vector<move_type>> movesCopy(ps.getLegalMoves());
-        for (move_type move : *movesCopy) { // try all moves
-            ps.executeMove(move);
-            if (backtrackHelper(ps)) { // recursive backtracking
-                path.push(move);
-                return true;
-            } 
-            ps.undoMove(move);
-            ps.setLegalMoves(movesCopy); // uses smart pointers to avoid copying
-        }
-        return false;
-    }
+SerialBacktrackAgent::SerialBacktrackAgent(PegSolitaire &startingBoard) {
+    initBoard = startingBoard;
 }
 
-stack<move_type> serial::backtrack(PegSolitaire &ps) {
-    while (!path.empty())
-        path.pop();
-    backtrackHelper(ps);
-    return path;
+void SerialBacktrackAgent::setInitBoard(PegSolitaire &newBoard) {
+    initBoard = newBoard;
+}
+
+bool SerialBacktrackAgent::search() {
+    if (initBoard.isWon()) { // successful case
+        return true;
+    }
+    else if (initBoard.isTerminal()) { // no options and failed
+        return false;
+    }
+    else if (hasSeen.contains(initBoard.getState())) {
+        return false; // remove dupes
+    }
+
+    hasSeen[initBoard.getState()] = true;
+
+    // backup the moves to prevent recomputation
+    shared_ptr<vector<move_type>> movesCopy(initBoard.getLegalMoves());
+    for (move_type move : *movesCopy) { // try all moves
+        initBoard.executeMove(move);
+        if (search()) { // recursive backtracking
+            solution.push(move);
+            return true;
+        } 
+        initBoard.undoMove(move);
+        initBoard.setLegalMoves(movesCopy); // uses smart pointers to avoid copying
+    }
+    return false;
+}
+
+const stack<move_type> &SerialBacktrackAgent::getSolution() {
+    if (!solFound) {
+        search();
+    }
+    return solution;
+}
+
+bool SerialBacktrackAgent::getHaveFoundSolution() {
+    return solFound;
 }

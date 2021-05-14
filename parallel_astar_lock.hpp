@@ -7,6 +7,8 @@
 #include <bitset>
 #include <queue>
 #include <limits>
+#include <mutex>
+#include <shared_mutex>
 #include <unordered_map>
 
 #define INFINITY (std::numeric_limits<double>::infinity())
@@ -25,6 +27,12 @@ class ParallelAStarLockAgent {
 private:
     compare_type getGScore(const priority_queue_type& board);
     compare_type getFScore(const priority_queue_type& board);
+    bool getIsInOpenSet(const priority_queue_type item);
+
+    void writeGScore(const priority_queue_type& board, compare_type write);
+    void writeFScore(const priority_queue_type& board, compare_type write);
+    void writeIsInOpenSet(const priority_queue_type& board, bool isIn);
+
 
     void initLocks();
 
@@ -35,6 +43,7 @@ private:
 
     unordered_map<priority_queue_type, compare_type> f, g;
     unordered_map<priority_queue_type, move_type> cameFrom;
+    unordered_map<priority_queue_type, bool> isInOpenSet;
     
     void buildPath(const priority_queue_type& endNode);
 
@@ -42,13 +51,9 @@ private:
     compare_type matched(const bitset<BOARD_SIZE>& goal, const bitset<BOARD_SIZE>& eval);
 
     // FOR LOCK APPROACH
-    omp_lock_t f_lock, g_lock, pq_lock;
-    // omp_lock_t sol_lock;
-
-    int max_depth = 0;
-
-    // FOR TASKS APPROACH
-    // vector<pair<priority_queue_type&, compare_type>>& expandNode(PegSolitaire &node);
+    omp_lock_t pq_lock;
+    // https://stackoverflow.com/questions/989795/example-for-boost-shared-mutex-multiple-reads-one-write
+    std::shared_mutex _gaccess, _faccess, _iioaccess;
 
 public:
     ParallelAStarLockAgent();

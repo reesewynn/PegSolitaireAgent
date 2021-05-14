@@ -118,9 +118,6 @@ bool ParallelAStarFanAgent::search() {
         PegSolitaire copyBoard(initBoard.getState());
         copyBoard.executeMove(moves[i]);
 
-        // generate serial a* agent, search
-        // SerialAStarAgent secretAgent(copyBoard);
-
         singleSearch(copyBoard);
     }
     

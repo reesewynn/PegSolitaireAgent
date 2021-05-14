@@ -5,58 +5,34 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --time=10:00:00
-#SBATCH --mem-per-cpu=5000
-##SBATCH --exclusive
-#SBATCH --job-name=DepthBoundBranching
-#SBATCH --output=Results/ResultsDBB-%j.out
+#SBATCH --mem-per-cpu=5G
+#SBATCH --exclusive
+#SBATCH --job-name=ParallelDBB
+#SBATCH --output=Tests/Solvable/Results/ResultsParallelDBB-%j.out
 
 make
 
-echo "Depth Bound Branching Approach"
-export OMP_NUM_THREADS=32
-export OMP_SCHEDULE="static"
-echo "Number of threads = " $OMP_NUM_THREADS
-echo "OMP_SCHEDULE = " $OMP_SCHEDULE
+echo "Parallel DBB Approach"
 
-# BOARD="  111 
-#   111 
-# 1111111 
-# 1110111 
-# 1111111 
-#   111 
-#   111"
+TEST_CASE1=000,001,0000100,0000010,0000000,000,000
+TEST_CASE2=000,110,0110101,0110010,1100011,010,000
+TEST_CASE3=011,101,0000010,0011111,0000101,010,110
+TEST_CASE4=011,101,0010100,0111111,0010111,011,111
+TEST_CASE5=011,101,1010011,1111111,0011111,011,111
+TEST_CASE6=011,101,1001111,1101111,1111111,111,111
+TEST_CASE7=011,101,1010011,1101111,1111111,111,111
+TEST_CASE8=111,001,1100111,0110001,0111001,111,001
+TEST_CASE9=111,001,0011111,1110101,1111101,110,110
+TEST_CASE10=111,111,1111111,1110111,1111111,111,111
 
-# BOARD="  000 
-#   101 
-# 0000000 
-# 1100011 
-# 1111111 
-#   111 
-#   111"
+BOARDS=($TEST_CASE1 $TEST_CASE2 $TEST_CASE3 $TEST_CASE4 $TEST_CASE5 $TEST_CASE6 $TEST_CASE7 $TEST_CASE8 $TEST_CASE9 $TEST_CASE10)
 
-# BOARD="  000 \
-#   101 \
-# 0000000 \
-# 1100011 \
-# 1111111 \
-#   111 \
-#   111 "
+for BOARD in "${BOARDS[@]}";
+do
+    for num_threads in 1 2 4 16 20 32
+    do
+        export OMP_NUM_THREADS=$num_threads
+        ./play_peg parallel_dbb "${BOARD}" --num_threads $num_threads --csv
+    done;
+done;
 
-# BOARD="  000 \
-#    001 \
-#  0010000 \
-#  1110011 \
-#  1111111 \
-#    111 \
-#    111 "
-
-BOARD="   000 \
-   101 \
- 0000000 \
- 1100011 \
- 1111111 \
-   111 \
-   111 "
-
-echo "$BOARD"
-time ./play_peg parallel_dbb "${BOARD}"

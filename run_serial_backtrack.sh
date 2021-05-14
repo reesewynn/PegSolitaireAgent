@@ -1,14 +1,14 @@
 #!/bin/bash
 
 #SBATCH --partition=cpsc424
-#SBATCH --cpus-per-task=4
+#SBATCH --cpus-per-task=1
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --time=20:00:00
 #SBATCH --mem-per-cpu=5G
 #SBATCH --exclusive
 #SBATCH --job-name=SerialBacktrack
-#SBATCH --output=Results/ResultsSerialBacktrack-%j.out
+#SBATCH --output=Tests/Solvable/Results/ResultsSerialBacktrack-%j.out
 
 make
 
@@ -27,9 +27,6 @@ TEST_CASE9=111,001,0011111,1110101,1111101,110,110
 TEST_CASE10=111,111,1111111,1110111,1111111,111,111
 
 BOARDS=($TEST_CASE1 $TEST_CASE2 $TEST_CASE3 $TEST_CASE4 $TEST_CASE5 $TEST_CASE6 $TEST_CASE7 $TEST_CASE8 $TEST_CASE9 $TEST_CASE10)
-
-# echo "$BOARD"
-# time ./play_peg serial_backtrack "${BOARD}"
 
 for BOARD in "${BOARDS[@]}";
 do

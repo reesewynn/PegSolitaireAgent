@@ -8,20 +8,25 @@ void DepthBoundBranchingAgent::setInitBoard(PegSolitaire &newBoard) {
     initBoard = newBoard;
 }
 
-bool DepthBoundBranchingAgent::singleThreadBacktrack(PegSolitaire& threadBoard, int rank) {
+bool DepthBoundBranchingAgent::singleThreadBacktrack(PegSolitaire& threadBoard, int rank, seen_map_type& hasSeen) {
     if (threadBoard.isWon()) { // successful case
         return true;
     }
     else if (threadBoard.isTerminal()) { // no options and failed
         return false;
     }
+    else if (hasSeen.contains(threadBoard.getState())) {
+        return false; // remove dupes
+    }
+
+    hasSeen[threadBoard.getState()] = true;
 
     // backup the moves to prevent recomputation
     shared_ptr<vector<move_type>> movesCopy(threadBoard.getLegalMoves());
     for (move_type move : *movesCopy) { // try all moves
         if (halt) return false;
         threadBoard.executeMove(move);
-        if (singleThreadBacktrack(threadBoard, rank)) { // recursive backtracking
+        if (singleThreadBacktrack(threadBoard, rank, hasSeen)) { // recursive backtracking
             threadSolutions[rank].push(move);
             return true;
         } 
@@ -45,24 +50,13 @@ bool DepthBoundBranchingAgent::backtrackWithDepth(int depth) {
     shared_ptr<vector<move_type>> movesCopy = initBoard.getLegalMoves(); // was passed to the constructor
     if (depth == maxBranchDepth) {
         // fan out!
-        // bool threadFoundSolutions[numThreads];
-        // move_type lastMove[numThreads]; 
-        // PegSolitaire threadBoards[numThreads]; // TODO: move to backTrack and make copy board instead
 
         for (int i = 0; i < numThreads; i++) {
             threadFoundSolutions[i] = false;
-
-            // make copies of every board so they don't overwrite
-            threadBoards[i] = initBoard;
-            // threadBoards[i].setBoard(initBoard.getState());
-            // threadBoards[i].setLegalMoves(movesCopy);
-            // vector<move_type> copyMoves = *(initBoard.getLegalMoves());
-            // shared_ptr<vector<move_type>> copyMovesPtr = &copyMoves;
-            // threadBoards[i].setLegalMoves(make_shared<vector<move_type>>(copyMoves));
+            threadBoards[i] = initBoard; // make copies of every board so they don't overwrite
         }
 
         
-        // bool flag = 0;
         // pragma for loop
         #pragma omp parallel for shared(threadFoundSolutions, threadBoards, halt, movesCopy) 
         for (int i = 0; i < movesCopy->size(); i++) {
@@ -71,16 +65,16 @@ bool DepthBoundBranchingAgent::backtrackWithDepth(int depth) {
             int rank = omp_get_thread_num();
             // execute move
             threadBoards[rank].executeMove((*movesCopy)[i]); 
-            
+            seen_map_type threadMap;
+
             // let thread run
-            threadFoundSolutions[rank] = threadFoundSolutions[rank] || singleThreadBacktrack(threadBoards[rank], rank);
+            threadFoundSolutions[rank] = \
+                threadFoundSolutions[rank] || singleThreadBacktrack(threadBoards[rank], rank, threadMap);
             if (threadFoundSolutions[rank]) {
-                // cout << "SHOULD STOP" << endl;
                 halt = true; // don't care about interleaving.
             }
             // undo move
             threadBoards[rank].undoMove((*movesCopy)[i]);
-            // initBoard.setLegalMoves(movesCopy); // uses smart pointers to avoid copying
             lastMoves[omp_get_thread_num()] = (*movesCopy)[i];
         }
         
@@ -119,12 +113,12 @@ bool DepthBoundBranchingAgent::backtrack() {
 
     threadFoundSolutions = new bool[numThreads];
     lastMoves = new move_type[numThreads]; 
-    threadBoards = new PegSolitaire[numThreads]; // TODO: move to backTrack and make copy board instead
+    threadBoards = new PegSolitaire[numThreads]; 
 
     
     // while(threadSolutions.size() != numThreads) {
     for (int i = 0; i < numThreads; i++) {
-        threadSolutions.push_back(stack<move_type>()); // TODO: compiles?
+        threadSolutions.push_back(stack<move_type>()); 
         threadBoards[i] = PegSolitaire();
 
     }
@@ -133,10 +127,6 @@ bool DepthBoundBranchingAgent::backtrack() {
     bool ret = backtrackWithDepth(0);
     
     solFound = true;
-    // delete[] threadFoundSolutions;
-    // delete[] lastMoves;
-    // delete[] threadBoards;
-
     return ret;
 }   
 

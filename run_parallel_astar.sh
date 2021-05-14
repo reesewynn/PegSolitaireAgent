@@ -29,18 +29,19 @@ BOARD="011,101,1001111,1101111,1111111,111,111"
 
 echo "$BOARD"
 
-# for num_threads in 4 16 20
+# for num_threads in 1 2 4 16 20
 # do
 #     export OMP_NUM_THREADS=$num_threads
-#     ./play_peg parallel_astar_fan "${BOARD}" --num_threads $num_threads --csv
+#     # ./play_peg parallel_astar_fan "${BOARD}" --num_threads $num_threads --csv
+#     ./play_peg parallel_astar_lock "${BOARD}" --num_threads $num_threads --csv
 # done;
 
 num_threads=20
-./play_peg parallel_astar_lock "${BOARD}" --num_threads $num_threads --csv
+# ./play_peg parallel_astar_lock "${BOARD}" --num_threads $num_threads --csv
 # ./play_peg parallel_astar_critical "${BOARD}" --num_threads $num_threads --csv
-# ./play_peg parallel_astar_task "${BOARD}" --num_threads $num_threads --csv
+./play_peg parallel_astar_task "${BOARD}" --num_threads $num_threads --csv
 # ./play_peg parallel_astar_fan "${BOARD}" --num_threads $num_threads --csv
 # ./play_peg parallel_astar_calculate "${BOARD}" --num_threads $num_threads --csv
 
-echo "SERIAL A Star Approach"
-./play_peg serial_astar "${BOARD}" --csv
+# echo "SERIAL A Star Approach"
+# ./play_peg serial_astar "${BOARD}" --csv
