@@ -1,5 +1,5 @@
-#ifndef PARALLEL_ASTAR_FAN_H
-#define PARALLEL_ASTAR_FAN_H
+#ifndef PARALLEL_ASTAR_H
+#define PARALLEL_ASTAR_H
 
 #include "peg_solitaire.hpp"
 #include <omp.h>
@@ -21,11 +21,10 @@ using std::pair; using std::vector;//, std::numeric_limits<double>::infinity;
 
 typedef bitset<BOARD_SIZE> priority_queue_type;
 
-class ParallelAStarFanAgent {
+class ParallelAStarAgent {
 private:
-    // compare_type getGScore(const priority_queue_type& board);
-    // compare_type getFScore(const priority_queue_type& board);
-    compare_type getScore(unordered_map<priority_queue_type, compare_type> &m, const priority_queue_type& board);
+    compare_type getGScore(const priority_queue_type& board);
+    compare_type getFScore(const priority_queue_type& board);
 
     void initLocks();
 
@@ -34,11 +33,10 @@ private:
     PegSolitaire initBoard;
     
 
-    // unordered_map<priority_queue_type, compare_type> f, g;
-    // unordered_map<priority_queue_type, move_type> cameFrom;
+    unordered_map<priority_queue_type, compare_type> f, g;
+    unordered_map<priority_queue_type, move_type> cameFrom;
     
-    bool flag = false;
-    void buildPath(const priority_queue_type& endNode, unordered_map<priority_queue_type, move_type>& cameFrom);
+    void buildPath(const priority_queue_type& endNode);
 
     compare_type manhattan(const bitset<BOARD_SIZE>& goal, const bitset<BOARD_SIZE>& eval);
     compare_type matched(const bitset<BOARD_SIZE>& goal, const bitset<BOARD_SIZE>& eval);
@@ -51,18 +49,17 @@ private:
 
     // FOR TASKS APPROACH
     // vector<pair<priority_queue_type&, compare_type>>& expandNode(PegSolitaire &node);
-    bool singleSearch(PegSolitaire& curr);
 
 public:
-    ParallelAStarFanAgent();
-    ParallelAStarFanAgent(PegSolitaire &startingBoard);
+    ParallelAStarAgent();
+    ParallelAStarAgent(PegSolitaire &startingBoard);
     
     bool search();
 
     compare_type heuristic(bitset<BOARD_SIZE> b);
 
-    stack<move_type> &getSolution();
+    stack<move_type> getSolution();
 
 };
 
-#endif /* PARALLEL_ASTAR_FAN_H */
+#endif /* PARALLEL_ASTAR_H */

@@ -2,86 +2,131 @@
 #include "serial_search.hpp"
 #include "parallel_dbb.hpp"
 #include "serial_astar.hpp"
-#include "parallel_astar.hpp"
+#include "parallel_astar_lock.hpp"
+#include "parallel_astar_critical.hpp"
+#include "parallel_astar_calculate.hpp"
+#include "parallel_astar_fan.hpp"
+#include "parallel_astar_task.hpp"
 #include <iostream>
 #include <stack>
 #include <cstring>
+#include <stdio.h>
 
 using std::cout, std::cin, std::endl;
 using std::stack;
 
-// stack<move_type> path;
+bool useCSV = false;
+int numThreads = 1;
 
-void serial_backtrack(PegSolitaire &pegBoard) {
-    auto path = serial::backtrack(pegBoard);
-    if (!path.empty()) {
-        while (!path.empty()) {
-            cout << path.top() << endl;
-            path.pop();
+void print_solution(bool solFound, const stack<move_type> *solution, double elapsed_time, string name = "", int num_threads = numThreads) {
+    if (!useCSV) {
+        if (!solFound || solution == nullptr) {
+            cout << "NO SOLUTION" << endl;
+        }   
+        else {
+            // auto path = *solution;
+            stack<move_type> path(*solution);
+            while (!path.empty()) {
+                cout << path.top() << endl;
+                path.pop();
+            }
         }
     }
     else {
-        cout << "NO SOLUTION" << endl;
+        const char* foundMessage = (!solFound || solution == nullptr)? "false" : "true";
+        int numRequired = (solution == nullptr)? -1 : solution->size(); 
+        printf("%s,%d,%s,%.2e\n", name.c_str(), num_threads, foundMessage, elapsed_time);
     }
+}
+
+void serial_backtrack(PegSolitaire &pegBoard) {
+    double start = omp_get_wtime();
+    auto path = serial::backtrack(pegBoard);
+    print_solution(true, &path, omp_get_wtime() - start, "serial_backtrack", 1);
 }
 
 void parallel_dbb(PegSolitaire &pegBoard) {
+    double start = omp_get_wtime();
     DepthBoundBranchingAgent agent(pegBoard);
-    if (agent.backtrack()) {
-        auto path = agent.getSolution();
-        if (!path.empty()) {
-            while (!path.empty()) {
-                cout << path.top() << endl;
-                path.pop();
-            }
-        }
-        else {
-            cout << "NO SOLUTION" << endl;
-        }
-    } 
-    else 
-        cout << "NO SOLUTION" << endl;
+    bool solFound = agent.backtrack();
+    auto path = (solFound)? &(agent.getSolution()) : nullptr;
+    
+    print_solution(solFound, path, omp_get_wtime() - start, "Depth Bounded Branching", numThreads);
 }
 
 void serial_astar(PegSolitaire pegBoard) {
+    double start = omp_get_wtime();
     SerialAStarAgent agent(pegBoard);
-    if (agent.search()) {
-        auto path = agent.getSolution();
-        if (!path.empty()) {
-            while (!path.empty()) {
-                cout << path.top() << endl;
-                path.pop();
-            }
-        }
-        else {
-            cout << "NO SOLUTION" << endl;
-        }
-    }
+    bool solFound = agent.search();
+    auto path = (solFound)? &(agent.getSolution()) : nullptr;
+    
+    print_solution(solFound, path, omp_get_wtime() - start, "Serial AStar", 1);
 }
 
-void parallel_astar(PegSolitaire pegBoard) {
-    ParallelAStarAgent agent(pegBoard);
-    if (agent.search()) {
-        auto path = agent.getSolution();
-        if (!path.empty()) {
-            while (!path.empty()) {
-                cout << path.top() << endl;
-                path.pop();
-            }
-        }
-        else {
-            cout << "NO SOLUTION" << endl;
-        }
-    }
-    else {
-        cout << "NO SOLUTION" << endl;
-    }
+void parallel_astar_lock(PegSolitaire pegBoard) {
+    double start = omp_get_wtime();
+    ParallelAStarLockAgent agent(pegBoard);
+    bool solFound = agent.search();
+    auto path = (solFound)? &(agent.getSolution()) : nullptr;
+    
+    print_solution(solFound, path, omp_get_wtime() - start, "Parallel AStar With Locks", numThreads);
+}
+
+void parallel_astar_critical(PegSolitaire pegBoard) {
+    double start = omp_get_wtime();
+    ParallelAStarCriticalAgent agent(pegBoard);
+    bool solFound = agent.search();
+    auto path = (solFound)? &(agent.getSolution()) : nullptr;
+    
+    print_solution(solFound, path, omp_get_wtime() - start, "Parallel AStar With Critical Section", numThreads);
+}
+
+void parallel_astar_task(PegSolitaire pegBoard) {
+    try {
+        double start = omp_get_wtime();
+        ParallelAStarTaskAgent agent(pegBoard);
+        bool solFound = agent.search();
+        auto path = (solFound)? &(agent.getSolution()) : nullptr;
+        
+        print_solution(solFound, path, omp_get_wtime() - start, "Parallel AStar With Task Section", numThreads);
+    } catch (...) { }
+}
+
+void parallel_astar_calculate(PegSolitaire pegBoard) {
+    double start = omp_get_wtime();
+    ParallelAStarCalculateAgent agent(pegBoard);
+    bool solFound = agent.search();
+    auto path = (solFound)? &(agent.getSolution()) : nullptr;
+    
+    print_solution(solFound, path, omp_get_wtime() - start, "Parallel AStar With Parallel Heuristic", numThreads);
+}
+
+void parallel_astar_fan(PegSolitaire pegBoard) {
+    double start = omp_get_wtime();
+    ParallelAStarFanAgent agent(pegBoard);
+    bool solFound = agent.search();
+    auto path = (solFound)? &(agent.getSolution()) : nullptr;
+    
+    print_solution(solFound, path, omp_get_wtime() - start, "Parallel AStar Fan Method", numThreads);
 }
 
 
 int main(int argc, char** argv) {
     PegSolitaire pegBoard;
-    if (argc > 1) {
+
+    for (int i = 0; i < argc; i++) {
+        if (!strcmp(argv[i], "--csv")) {
+            useCSV = true;
+        }
+        else if (i != argc - 1 && !strcmp(argv[i], "--num_threads")) {
+            numThreads = atoi(argv[i + 1]);
+        }
+    }
+
+    
+    omp_set_num_threads(numThreads);
+
+    if (argc > 2) {
         string boardVal = argv[2];
         auto inputBoard = bitset<BOARD_SIZE>();
         int i = 0;
@@ -98,8 +143,7 @@ int main(int argc, char** argv) {
         }
         pegBoard = PegSolitaire(inputBoard);
     }
-    // stack<move_type> path; 
-    // TODO: if terminal from start, this is wrong.
+    
     if (!strcmp(argv[1], "serial_backtrack")) {
         serial_backtrack(pegBoard);
     }
@@ -109,7 +153,19 @@ int main(int argc, char** argv) {
     else if (!strcmp(argv[1], "parallel_dbb")) {
         parallel_dbb(pegBoard);
     }
-    else if (!strcmp(argv[1], "parallel_astar")) {
-        parallel_astar(pegBoard);
+    else if (!strcmp(argv[1], "parallel_astar_lock")) {
+        parallel_astar_lock(pegBoard);
+    }
+    else if (!strcmp(argv[1], "parallel_astar_critical")) {
+        parallel_astar_critical(pegBoard);
+    }
+    else if (!strcmp(argv[1], "parallel_astar_task")) {
+        parallel_astar_task(pegBoard);
+    }
+    else if (!strcmp(argv[1], "parallel_astar_calculate")) {
+        parallel_astar_calculate(pegBoard);
+    }
+    else if (!strcmp(argv[1], "parallel_astar_fan")) {
+        parallel_astar_fan(pegBoard);
     }
 }

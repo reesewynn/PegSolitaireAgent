@@ -98,26 +98,64 @@ void PegSolitaire::undoMove(move_type move) {
     //TODO: update moves around this move. 
 }
 
+// void PegSolitaire::fillLegalMoves() {
+//     legalMoves = shared_ptr<vector<move_type>>(new vector<move_type>);
+//     int num_cols = MAX_COL_SMALL;
+//     for(int row = 0; row < MAX_ROW; row++) {
+//         num_cols = (row < MIDDLE_RIGHT && row >= MIDDLE_LEFT)? MAX_COL_WIDE : MAX_COL_SMALL;
+//         for(int col = 0; col < num_cols; col++) {
+//             if (gameState.test(ROW_IDX(row) + col)) {
+//                 // try all four directions, if available, add. 
+//                 location pos = location(row, col);
+//                 for(int dir = NORTH; dir != WEST + 1; dir++) {
+//                     move_type move = move_type(pos, (direction) dir);
+//                     if (isLegalMove(move)) {
+//                         legalMoves->push_back(move);
+//                     }
+//                 }
+//             }
+//         }
+//     }
+//     movesFound = true;
+//     // TODO: avoid ROW_IDX macro, by iterating with += 3, and if (middle) += 2 again
+// }
+
 void PegSolitaire::fillLegalMoves() {
     legalMoves = shared_ptr<vector<move_type>>(new vector<move_type>);
-    int num_cols = MAX_COL_SMALL;
-    for(int row = 0; row < MAX_ROW; row++) {
-        num_cols = (row < MIDDLE_RIGHT && row >= MIDDLE_LEFT)? MAX_COL_WIDE : MAX_COL_SMALL;
-        for(int col = 0; col < num_cols; col++) {
-            if (gameState.test(ROW_IDX(row) + col)) {
-                // try all four directions, if available, add. 
-                location pos = location(row, col);
-                for(int dir = NORTH; dir != WEST + 1; dir++) {
-                    move_type move = move_type(pos, (direction) dir);
-                    if (isLegalMove(move)) {
-                        legalMoves->push_back(move);
-                    }
-                }
-            }
+    for (int i = 0; i < BOARD_SIZE; i++) {
+        if (gameState[i]) continue;
+        int row = GET_ROW(i);
+        int col = i - ROW_IDX(row);
+
+        // try all four dirs
+        for (int dir = NORTH; dir != WEST + 1; dir++) {
+            int dy = (dir == EAST)? 1 : (dir == WEST)? -1 : 0;
+            int dx = (dir == NORTH)? -1 : (dir == SOUTH)? 1 : 0;
+
+            dy += DY_OFFSET(row, dx);
+            if (row + dx < 0 || col + dy < 0) continue;
+            if (row + dx >= MAX_ROW || col + dy >= MAX_COL_WIDE) continue;
+            if ((row + dx < MIDDLE_LEFT || row + dx >= MIDDLE_RIGHT) && col + dy > MIDDLE_LEFT) continue;
+            if (!gameState[ROW_IDX(row + dx) + col + dy]) continue;
+
+            dx *= 2; 
+            dy = (dir == EAST)? 1 : (dir == WEST)? -1 : 0;
+            dy = (dx == 0)? dy * 2 : dy; // don't shift if an x dir
+            dy += DY_OFFSET(row, dx);
+            
+            if (row + dx < 0 || col + dy < 0) continue;
+            if (row + dx >= MAX_ROW || col + dy >= MAX_COL_WIDE) continue;
+            if ((row + dx < MIDDLE_LEFT || row + dx >= MIDDLE_RIGHT) && col + dy > MIDDLE_LEFT) continue;
+            if (!gameState[ROW_IDX(row + dx) + col + dy]) continue;
+            
+
+            // invert move
+            direction up_dir = (dir == NORTH)? SOUTH : (dir == SOUTH)? NORTH : (dir == EAST)? WEST : EAST;
+            legalMoves->push_back(move_type(location(row + dx, col + dy), (direction) up_dir));
+
         }
     }
     movesFound = true;
-    // TODO: avoid ROW_IDX macro, by iterating with += 3, and if (middle) += 2 again
 }
 
 bool PegSolitaire::isTerminal() {

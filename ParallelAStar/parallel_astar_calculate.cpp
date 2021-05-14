@@ -1,19 +1,37 @@
-#include "serial_astar.hpp"
+#include "../parallel_astar_calculate.hpp"
+#include <math.h>
 
-SerialAStarAgent::SerialAStarAgent() {
+compare_type ParallelAStarCalculateAgent::getGScore(const priority_queue_type& board) {
+    return (g.contains(board))? g[board] : INFINITY;
+}
+
+compare_type ParallelAStarCalculateAgent::getFScore(const priority_queue_type& board) {
+    return (f.contains(board))? f[board] : INFINITY;
+}
+
+void ParallelAStarCalculateAgent::initLocks() {
+    omp_init_lock(&f_lock);
+    omp_init_lock(&g_lock);
+    omp_init_lock(&pq_lock);
+    // omp_init_lock(&sol_lock);
+}
+
+ParallelAStarCalculateAgent::ParallelAStarCalculateAgent() {
     goalState.set(CENTER_IDX);
     bitset<BOARD_SIZE> b;
     for(int i = 0; i < BOARD_SIZE; i++) if (i != CENTER_IDX) b.set(i);
 
     initBoard.setState(b);
+    initLocks();
 }
 
-SerialAStarAgent::SerialAStarAgent(PegSolitaire &startingBoard) {
+ParallelAStarCalculateAgent::ParallelAStarCalculateAgent(PegSolitaire &startingBoard) {
     initBoard = startingBoard;
     goalState.set(CENTER_IDX);
+    initLocks();
 }
 
-void SerialAStarAgent::buildPath(const priority_queue_type& endNode) {
+void ParallelAStarCalculateAgent::buildPath(const priority_queue_type& endNode) {
     PegSolitaire boardState = PegSolitaire(endNode);
     while (cameFrom.contains(boardState.getState())) {
         auto usedMove = cameFrom[boardState.getState()];
@@ -22,16 +40,7 @@ void SerialAStarAgent::buildPath(const priority_queue_type& endNode) {
     }
 }
 
-compare_type SerialAStarAgent::getGScore(const priority_queue_type& board) {
-    return (g.contains(board))? g[board] : INFINITY;
-}
-
-compare_type SerialAStarAgent::getFScore(const priority_queue_type& board) {
-    return (f.contains(board))? f[board] : INFINITY;
-}
-
-bool SerialAStarAgent::search() {
-    // priority_queue<priority_queue_type, vector<priority_queue_type>, Compare> openSet(Compare(f));
+bool ParallelAStarCalculateAgent::search() {
     auto cmp = [this](priority_queue_type const& a, priority_queue_type const& b) -> bool {
         return this->getFScore(a) >= this->getFScore(b);
     };
@@ -55,7 +64,11 @@ bool SerialAStarAgent::search() {
         }
         isInOpenSet[current.getState()] = false;
         
-        for (auto move : *current.getLegalMoves()) {
+        vector<move_type> moves = *current.getLegalMoves();
+        int size = moves.size();
+        
+        for (int i = 0; i < size; i++) {
+            auto move = moves[i];
             // apply move
             PegSolitaire newState = current; // doesn't recompute moves until ready
             newState.executeMove(move);
@@ -67,12 +80,15 @@ bool SerialAStarAgent::search() {
             // if better, record it!
             if (tentativeGScore < getGScore(state)) {
                 g[state] = tentativeGScore;
-                f[state] = tentativeGScore + heuristic(state);
+                compare_type update = tentativeGScore + heuristic(state);
+                f[state] = update; 
+                
                 if (!isInOpenSet.contains(state)) {
                     openSet.push(state);
                     isInOpenSet[state] = true;
                 }
                 cameFrom[state] = move;
+                
             }
         }
 
@@ -81,19 +97,20 @@ bool SerialAStarAgent::search() {
     return false;
 }
 
-compare_type SerialAStarAgent::manhattan(const bitset<BOARD_SIZE>& goal, const bitset<BOARD_SIZE>& eval) {
+compare_type ParallelAStarCalculateAgent::manhattan(const bitset<BOARD_SIZE>& goal, const bitset<BOARD_SIZE>& eval) {
     compare_type count = 0;
     // evaluate the manhattan distance for all MATCHED slots
+    #pragma omp parallel for reduction(+:count)
     for (int i = 0; i < BOARD_SIZE; i++) {
         if (eval[i] != goal[i]) {
             int row = GET_ROW(i);
-            count += (row - CENTER + (i - row) - CENTER);     
+            count += pow(2,std::max(abs(row - CENTER) , abs((i - row) - CENTER)));     
         }
     }
 
     return count;
 }
-compare_type SerialAStarAgent::matched(const bitset<BOARD_SIZE>& goal, const bitset<BOARD_SIZE>& eval) {
+compare_type ParallelAStarCalculateAgent::matched(const bitset<BOARD_SIZE>& goal, const bitset<BOARD_SIZE>& eval) {
     int count = 0;
     for (int i = 0; i < BOARD_SIZE; i++) {
         if (eval[i] == goal[i]) count++;
@@ -101,11 +118,11 @@ compare_type SerialAStarAgent::matched(const bitset<BOARD_SIZE>& goal, const bit
     return count;
 }
 
-compare_type SerialAStarAgent::heuristic(bitset<BOARD_SIZE> b) {
+compare_type ParallelAStarCalculateAgent::heuristic(bitset<BOARD_SIZE> b) {
     // return matched(goalState, b);
     return manhattan(goalState, b);
 }
 
-stack<move_type>& SerialAStarAgent::getSolution() {
+stack<move_type>& ParallelAStarCalculateAgent::getSolution() {
     return solution;
 }

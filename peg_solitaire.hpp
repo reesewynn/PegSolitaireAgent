@@ -39,9 +39,9 @@ using std::shared_ptr;
 
 #define GET_ROW(x) \
     ((x < MAX_COL_SMALL)? 0 : (x < MAX_COL_SMALL * 2)? 1 : \
-    (x < TOP_ROWS_COUNT + MIDDLE_RIGHT)? 2 : (x < TOP_ROWS_COUNT + MIDDLE_RIGHT * 2)? 3 : \
-    (x < TOP_AND_MIDDLE_COUNT + MAX_COL_SMALL)? 4 : \
-    (x < TOP_AND_MIDDLE_COUNT + MAX_COL_SMALL * 2)? 5 : 6) 
+    (x < TOP_ROWS_COUNT + MAX_COL_WIDE)? 2 : (x < TOP_ROWS_COUNT + MAX_COL_WIDE * 2)? 3 : \
+    (x < TOP_AND_MIDDLE_COUNT)? 4 : \
+    (x < TOP_AND_MIDDLE_COUNT + MAX_COL_SMALL)? 5 : 6) 
 
 
 

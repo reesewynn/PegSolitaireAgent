@@ -3,7 +3,7 @@ CFLAGS = --std=c++20 -O0 -g -fopenmp
 
 BINARIES = play_peg
 GAME_DEPENDENCIES = board peg_solitaire
-PARALLEL_ASTAR_IMPL = parallel_astar_locks
+PARALLEL_ASTAR_IMPL = parallel_astar_lock parallel_astar_critical parallel_astar_task parallel_astar_calculate parallel_astar_fan
 PARALLEL_ASTAR_DIR = ParallelAStar
 AGENT_DEPENDENCIES = serial_search parallel_dbb serial_astar $(PARALLEL_ASTAR_IMPL)
 

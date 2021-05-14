@@ -1,0 +1,6 @@
+make: Nothing to be done for `all'.
+Parallel A Star Approach
+011,101,1001111,1101111,1111111,111,111
+/var/spool/slurmd/job24398221/slurm_script: line 39: 24709 Segmentation fault      ./play_peg parallel_astar_lock "${BOARD}" --num_threads $num_threads --csv
+SERIAL A Star Approach
+Serial AStar,1,true,2.94e+01
