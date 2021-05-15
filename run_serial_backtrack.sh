@@ -10,7 +10,7 @@
 #SBATCH --job-name=SerialBacktrack
 #SBATCH --output=Tests/Solvable/Results/ResultsSerialBacktrack-%j.out
 
-make
+cd src && make
 
 echo "SERIAL BACKTRACKING APPROACH"
 

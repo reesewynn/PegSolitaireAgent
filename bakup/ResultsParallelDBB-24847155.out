@@ -1,0 +1,21 @@
+make: Nothing to be done for `all'.
+Parallel DBB Approach
+Depth Bounded Branching,1,false,1.70e-04
+Depth Bounded Branching,2,false,1.50e-04
+Depth Bounded Branching,4,false,1.50e-04
+Depth Bounded Branching,16,false,1.73e-04
+Depth Bounded Branching,20,false,1.88e-04
+Depth Bounded Branching,32,false,1.96e-04
+Depth Bounded Branching,1,false,6.92e-05
+Depth Bounded Branching,2,false,6.95e-05
+Depth Bounded Branching,4,false,8.35e-05
+Depth Bounded Branching,16,false,9.52e-05
+Depth Bounded Branching,20,false,1.09e-04
+Depth Bounded Branching,32,false,1.20e-04
+Depth Bounded Branching,1,false,1.62e-05
+Depth Bounded Branching,2,false,1.77e-05
+Depth Bounded Branching,4,false,2.30e-05
+Depth Bounded Branching,16,false,4.18e-05
+Depth Bounded Branching,20,false,5.31e-05
+Depth Bounded Branching,32,false,6.61e-05
+slurmstepd: error: *** JOB 24847155 ON c03n10 CANCELLED AT 2021-05-14T15:38:40 ***

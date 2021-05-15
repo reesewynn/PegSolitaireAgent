@@ -1,0 +1,6 @@
+make: Nothing to be done for `all'.
+Serial A Star Approach
+Serial AStar,1,false,1.83e-04,7
+Serial AStar,1,false,7.27e-05,7
+Serial AStar,1,false,2.20e-05,0
+slurmstepd: error: *** JOB 24895874 ON c03n09 CANCELLED AT 2021-05-14T19:11:15 ***

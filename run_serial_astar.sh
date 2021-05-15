@@ -10,7 +10,7 @@
 #SBATCH --job-name=SerialAStarCalculate
 #SBATCH --output=Tests/Solvable/Results/ResultsSerialAStar-%j.out
 
-make
+cd src && make
 
 echo "Serial A Star Approach"
 

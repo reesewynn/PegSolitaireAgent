@@ -11,7 +11,7 @@
 #SBATCH --job-name=ParallelAStarFan
 #SBATCH --output=Tests/Solvable/Results/ResultsParallelAStarFan-%j.out
 
-make
+cd src && make
 
 echo "Parallel A Star Fan Approach"
 
@@ -30,7 +30,7 @@ BOARDS=($TEST_CASE1 $TEST_CASE2 $TEST_CASE3 $TEST_CASE4 $TEST_CASE5 $TEST_CASE6 
 
 for BOARD in "${BOARDS[@]}";
 do
-    for num_threads in 1 2 4 16 20 32
+    for num_threads in 4 8 16 20 32
     do
         export OMP_NUM_THREADS=$num_threads
         ./play_peg parallel_astar_fan "${BOARD}" --num_threads $num_threads --csv
