@@ -53,6 +53,8 @@ private:
     // vector<pair<priority_queue_type&, compare_type>>& expandNode(PegSolitaire &node);
     bool singleSearch(PegSolitaire& curr);
 
+    shared_ptr<bitset<BOARD_SIZE>> forCpy = nullptr;
+
 public:
     ParallelAStarFanAgent();
     ParallelAStarFanAgent(PegSolitaire &startingBoard);

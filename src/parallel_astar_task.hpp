@@ -42,6 +42,8 @@ private:
 
     unordered_map<priority_queue_type, compare_type> f, g;
     unordered_map<priority_queue_type, move_type> cameFrom;
+
+    shared_ptr<bitset<BOARD_SIZE>> forCpy = nullptr;
     
     unordered_map<priority_queue_type, bool> isInOpenSet;
     
@@ -53,6 +55,7 @@ private:
     // FOR LOCK APPROACH
     omp_lock_t  pq_lock;
     // https://stackoverflow.com/questions/989795/example-for-boost-shared-mutex-multiple-reads-one-write
+    //      adapted to use C++17 shared_mutex (much faster)
     std::shared_mutex _gaccess, _faccess, _iioaccess;
 
     int num_pop = 3;

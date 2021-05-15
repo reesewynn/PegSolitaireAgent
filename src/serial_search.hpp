@@ -15,7 +15,8 @@ private:
     PegSolitaire initBoard;
 
     stack<move_type> solution;
-
+    shared_ptr<bitset<BOARD_SIZE>> forCpy = nullptr;
+ 
     bool solFound = false;
 
 public:

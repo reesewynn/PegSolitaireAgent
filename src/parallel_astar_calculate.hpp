@@ -34,6 +34,8 @@ private:
     compare_type manhattan(const bitset<BOARD_SIZE>& goal, const bitset<BOARD_SIZE>& eval);
     compare_type matched(const bitset<BOARD_SIZE>& goal, const bitset<BOARD_SIZE>& eval);
 
+    shared_ptr<bitset<BOARD_SIZE>> forCpy = nullptr;
+
     void buildPath(const priority_queue_type& endNode);
 public:
     ParallelAStarCalculateAgent();

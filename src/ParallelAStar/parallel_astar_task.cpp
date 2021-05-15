@@ -54,7 +54,7 @@ ParallelAStarTaskAgent::ParallelAStarTaskAgent(PegSolitaire &startingBoard) {
 }
 
 void ParallelAStarTaskAgent::buildPath(const priority_queue_type& endNode) {
-    PegSolitaire boardState = PegSolitaire(endNode);
+    PegSolitaire boardState = PegSolitaire(endNode, forCpy);
     while (cameFrom.contains(boardState.getState())) {
         auto usedMove = cameFrom[boardState.getState()];
         solution.push(usedMove);
@@ -112,7 +112,7 @@ bool ParallelAStarTaskAgent::search() {
                 omp_unset_lock(&pq_lock);
                 for (int i = 0; i < used; i++) {
                     auto popped = threadStates[rank][i];
-                    PegSolitaire current = PegSolitaire(popped); // make new board, frustrating. I know.
+                    PegSolitaire current = PegSolitaire(popped, forCpy); // make new board, frustrating. I know.
                     if (current.isWon()) {
                         lastState = current.getState();
                         exit = true;
@@ -171,7 +171,6 @@ bool ParallelAStarTaskAgent::search() {
 
                         #pragma omp critical (cameFrom)
                         cameFrom[state] = move;
-                    // }
                 }
 
                 threadAdditions[rank].clear();
@@ -188,7 +187,7 @@ bool ParallelAStarTaskAgent::search() {
             return true;
         }
     }
-
+    
     return false;
 }
 
@@ -214,7 +213,6 @@ compare_type ParallelAStarTaskAgent::matched(const bitset<BOARD_SIZE>& goal, con
 }
 
 compare_type ParallelAStarTaskAgent::heuristic(bitset<BOARD_SIZE> b) {
-    // return matched(goalState, b);
     return manhattan(goalState, b);
 }
 

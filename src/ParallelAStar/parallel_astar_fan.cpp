@@ -28,7 +28,7 @@ ParallelAStarFanAgent::ParallelAStarFanAgent(PegSolitaire &startingBoard) {
 }
 
 void ParallelAStarFanAgent::buildPath(const priority_queue_type& endNode, unordered_map<priority_queue_type, move_type>& cameFrom) {
-    PegSolitaire boardState = PegSolitaire(endNode);
+    PegSolitaire boardState = PegSolitaire(endNode, forCpy);
     while (cameFrom.contains(boardState.getState())) {
         auto usedMove = cameFrom[boardState.getState()];
         solution.push(usedMove);
@@ -57,7 +57,7 @@ bool ParallelAStarFanAgent::singleSearch(PegSolitaire& curr) {
 
     while (!openSet.empty() && !(flag)) {
         // break;
-        PegSolitaire current = PegSolitaire(openSet.top()); // make new board, frustrating. I know.
+        PegSolitaire current = PegSolitaire(openSet.top(), forCpy); // make new board, frustrating. I know.
         openSet.pop();
         if (current.isWon()) {
             if (!flag) {
@@ -106,7 +106,7 @@ bool ParallelAStarFanAgent::search() {
     for(int i = 0; i < num_iters; i++) {
         if (flag) continue;
 
-        PegSolitaire copyBoard(initBoard.getState());
+        PegSolitaire copyBoard(initBoard.getState(), forCpy);
         copyBoard.executeMove(moves[i]);
 
         singleSearch(copyBoard);

@@ -3,7 +3,6 @@
 #include "parallel_dbb.hpp"
 #include "serial_astar.hpp"
 #include "parallel_astar_lock.hpp"
-#include "parallel_astar_critical.hpp"
 #include "parallel_astar_calculate.hpp"
 #include "parallel_astar_fan.hpp"
 #include "parallel_astar_task.hpp"
@@ -81,14 +80,6 @@ void parallel_astar_lock(PegSolitaire pegBoard) {
     } catch (...) { }
 }
 
-void parallel_astar_critical(PegSolitaire pegBoard) {
-    double start = omp_get_wtime();
-    ParallelAStarCriticalAgent agent(pegBoard);
-    bool solFound = agent.search();
-    auto path = (solFound)? &(agent.getSolution()) : nullptr;
-    
-    print_solution(solFound, path, omp_get_wtime() - start, "Parallel AStar With Critical Section", numThreads);
-}
 
 void parallel_astar_task(PegSolitaire pegBoard) {
     try {
@@ -166,9 +157,6 @@ int main(int argc, char** argv) {
     }
     else if (!strcmp(argv[1], "parallel_astar_lock")) {
         parallel_astar_lock(pegBoard);
-    }
-    else if (!strcmp(argv[1], "parallel_astar_critical")) {
-        parallel_astar_critical(pegBoard);
     }
     else if (!strcmp(argv[1], "parallel_astar_task")) {
         parallel_astar_task(pegBoard);

@@ -31,6 +31,8 @@ private:
     unordered_map<priority_queue_type, compare_type> f, g;
     unordered_map<priority_queue_type, move_type> cameFrom;
 
+    shared_ptr<bitset<BOARD_SIZE>> forCpy = nullptr;
+
     compare_type manhattan(const bitset<BOARD_SIZE>& goal, const bitset<BOARD_SIZE>& eval);
     compare_type matched(const bitset<BOARD_SIZE>& goal, const bitset<BOARD_SIZE>& eval);
 

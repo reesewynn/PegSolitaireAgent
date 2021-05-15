@@ -1,14 +1,14 @@
 #include "peg_solitaire.hpp"
 
-PegSolitaire::PegSolitaire(bitset<BOARD_SIZE> inputBoard) {
+PegSolitaire::PegSolitaire(bitset<BOARD_SIZE> inputBoard, shared_ptr<bitset<BOARD_SIZE>> newGoal) {
     gameState = inputBoard;
+    default_goal = (newGoal == nullptr);
+    otherGoal = newGoal; // default nullptr
     fillLegalMoves();
 }
 
 PegSolitaire::PegSolitaire() {
     int center = ROW_IDX(CENTER) + CENTER;
-    // center += CENTER;
-    // int temp = CENTER;
     gameState = bitset<BOARD_SIZE>(1);
     for(int i = 0; i < BOARD_SIZE; i++) {
         gameState[i] = (i == center)? 0 : 1;
@@ -95,30 +95,7 @@ void PegSolitaire::undoMove(move_type move) {
     to_hop = findDest(move, 2);
     this->gameState.flip(ROW_IDX(to_hop.first) + to_hop.second);
     movesFound = false;
-    //TODO: update moves around this move. 
 }
-
-// void PegSolitaire::fillLegalMoves() {
-//     legalMoves = shared_ptr<vector<move_type>>(new vector<move_type>);
-//     int num_cols = MAX_COL_SMALL;
-//     for(int row = 0; row < MAX_ROW; row++) {
-//         num_cols = (row < MIDDLE_RIGHT && row >= MIDDLE_LEFT)? MAX_COL_WIDE : MAX_COL_SMALL;
-//         for(int col = 0; col < num_cols; col++) {
-//             if (gameState.test(ROW_IDX(row) + col)) {
-//                 // try all four directions, if available, add. 
-//                 location pos = location(row, col);
-//                 for(int dir = NORTH; dir != WEST + 1; dir++) {
-//                     move_type move = move_type(pos, (direction) dir);
-//                     if (isLegalMove(move)) {
-//                         legalMoves->push_back(move);
-//                     }
-//                 }
-//             }
-//         }
-//     }
-//     movesFound = true;
-//     // TODO: avoid ROW_IDX macro, by iterating with += 3, and if (middle) += 2 again
-// }
 
 void PegSolitaire::fillLegalMoves() {
     legalMoves = shared_ptr<vector<move_type>>(new vector<move_type>);
@@ -163,11 +140,15 @@ bool PegSolitaire::isTerminal() {
         // find moves
         fillLegalMoves();
     }
-    return legalMoves->size() == 0;
+    return ( legalMoves->size() == 0) || (!default_goal && gameState.count() <= otherGoal->count());
 }
 
 bool PegSolitaire::isWon() {
-    if (gameState[CENTER_IDX] && gameState.count() == 1) {
+    if (default_goal && gameState[CENTER_IDX] && gameState.count() == 1) {
+        return true;
+    }
+    // use operator overloaded == to prevent copies
+    else if (!default_goal && otherGoal->operator==(gameState)) {
         return true;
     }
     return false;

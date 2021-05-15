@@ -14,7 +14,7 @@ ParallelAStarCalculateAgent::ParallelAStarCalculateAgent(PegSolitaire &startingB
 }
 
 void ParallelAStarCalculateAgent::buildPath(const priority_queue_type& endNode) {
-    PegSolitaire boardState = PegSolitaire(endNode);
+    PegSolitaire boardState = PegSolitaire(endNode, forCpy);
     while (cameFrom.contains(boardState.getState())) {
         auto usedMove = cameFrom[boardState.getState()];
         solution.push(usedMove);
@@ -47,7 +47,7 @@ bool ParallelAStarCalculateAgent::search() {
 
     while (!openSet.empty()) {
         // break;
-        PegSolitaire current = PegSolitaire(openSet.top()); // make new board, frustrating. I know.
+        PegSolitaire current = PegSolitaire(openSet.top(), forCpy); // make new board, frustrating. I know.
         openSet.pop();
         if (current.isWon()) {
             buildPath(current.getState());

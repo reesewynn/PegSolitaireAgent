@@ -32,6 +32,7 @@ private:
 
     vector<stack<move_type>> threadSolutions;
     unordered_map<bitset<BOARD_SIZE>, bool> globalSeen;
+    shared_ptr<bitset<BOARD_SIZE>> forCpy = nullptr;
 
 
 public:

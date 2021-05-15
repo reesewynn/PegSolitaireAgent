@@ -40,6 +40,8 @@ private:
     stack<move_type> solution;
     bitset<BOARD_SIZE> goalState;
     PegSolitaire initBoard;
+
+    shared_ptr<bitset<BOARD_SIZE>> forCpy = nullptr;
     
 
     unordered_map<entry_type, compare_type> f, g;

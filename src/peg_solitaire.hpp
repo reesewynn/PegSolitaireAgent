@@ -62,12 +62,13 @@ protected:
     location findDest(const move_type& move, int hop_count = 2);
     bool isLegalMove(const move_type& move);
     shared_ptr<vector<move_type>> legalMoves;
-    bool movesFound = false, isReverseAgent = false;
+    bool movesFound = false, default_goal = true;
+    shared_ptr<bitset<BOARD_SIZE>> otherGoal;
     void fillLegalMoves();
     
 public:
     PegSolitaire();
-    PegSolitaire(bitset<BOARD_SIZE> inputBoard);
+    PegSolitaire(bitset<BOARD_SIZE> inputBoard, shared_ptr<bitset<BOARD_SIZE>> newGoal = nullptr);
     const shared_ptr<vector<move_type>> getLegalMoves() override;
 
     void executeMove(move_type move) override;

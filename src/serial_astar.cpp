@@ -14,7 +14,7 @@ SerialAStarAgent::SerialAStarAgent(PegSolitaire &startingBoard) {
 }
 
 void SerialAStarAgent::buildPath(const priority_queue_type& endNode) {
-    PegSolitaire boardState = PegSolitaire(endNode);
+    PegSolitaire boardState = PegSolitaire(endNode, forCpy);
     while (cameFrom.contains(boardState.getState())) {
         auto usedMove = cameFrom[boardState.getState()];
         solution.push(usedMove);
@@ -47,7 +47,7 @@ bool SerialAStarAgent::search() {
 
     while (!openSet.empty()) {
         // break;
-        PegSolitaire current = PegSolitaire(openSet.top()); // make new board, frustrating. I know.
+        PegSolitaire current = PegSolitaire(openSet.top(), forCpy); // make new board, frustrating. I know.
         openSet.pop();
         if (current.isWon()) {
             buildPath(current.getState());
@@ -94,7 +94,7 @@ compare_type SerialAStarAgent::manhattan(const bitset<BOARD_SIZE>& goal, const b
     return count;
 }
 compare_type SerialAStarAgent::matched(const bitset<BOARD_SIZE>& goal, const bitset<BOARD_SIZE>& eval) {
-    int count = 0;
+    int count = 0; 
     for (int i = 0; i < BOARD_SIZE; i++) {
         if (eval[i] != goal[i]) count++;
     }

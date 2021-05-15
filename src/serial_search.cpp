@@ -16,7 +16,7 @@ bool SerialBacktrackAgent::search() {
         return false;
     }
     else if (hasSeen.contains(initBoard.getState())) {
-        return false; // remove dupes
+        return false; // remove dupes  
     }
 
     hasSeen[initBoard.getState()] = true;
